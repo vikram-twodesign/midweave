@@ -33,6 +33,7 @@ jobs:
         run: npm ci
       - name: Build with Next.js
         env:
+          NODE_ENV: production
           NEXT_PUBLIC_REPOSITORY: ${{ secrets.NEXT_PUBLIC_REPOSITORY }}
           NEXT_PUBLIC_MW_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_MW_ACCESS_TOKEN }}
         run: npm run build
@@ -50,4 +51,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v4
