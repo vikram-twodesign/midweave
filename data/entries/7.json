@@ -1,0 +1,76 @@
+{
+  "id": 7,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732557740080_00000316_photo_2024_11_14_23_27_22.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732557740080_00000316_photo_2024_11_14_23_27_22.jpg",
+      "size": 698448
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 973594508889898",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "A vibrant and eclectic collage of illustrations featuring various subjects including a chess piece, a robot, a scenic winter landscape, and fantastical creatures. The artwork showcases a meticulous attention to detail and a harmonious blend of colors.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Contemporary Surrealism",
+      "secondary": [
+        "Realism",
+        "Fantasy",
+        "Concept Art"
+      ],
+      "influences": [
+        "Modern digital art",
+        "Illustration techniques"
+      ]
+    },
+    "technical": {
+      "quality": "High resolution with crisp details",
+      "renderStyle": "Digital painting",
+      "detailLevel": "Highly detailed with intricate textures",
+      "lighting": "Soft and ambient lighting enhancing depth"
+    },
+    "colors": {
+      "palette": [
+        "#FF5733",
+        "#C70039",
+        "#900C3F",
+        "#581845",
+        "#FFC300"
+      ],
+      "mood": "Playful yet contemplative",
+      "contrast": "Moderate contrast with a balanced color distribution"
+    },
+    "tags": {
+      "style": [
+        "collage",
+        "illustration",
+        "surrealism"
+      ],
+      "technical": [
+        "high resolution",
+        "digital painting",
+        "detailed"
+      ],
+      "mood": [
+        "playful",
+        "contemplative",
+        "vibrant"
+      ]
+    }
+  },
+  "createdAt": "2024-11-25T18:02:23.523Z",
+  "lastModified": "2024-11-25T18:02:23.523Z",
+  "featured": false,
+  "curatorNotes": ""
+}

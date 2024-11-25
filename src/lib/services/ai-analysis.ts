@@ -45,7 +45,7 @@ export async function analyzeImage(file: File): Promise<AIAnalysis> {
               type: "text",
               text: `Analyze this image comprehensively and return a JSON response with the following structure:
               {
-                "description": "A detailed 2-3 line description of the image and its style",
+                "description": "A detailed 2-3 line description of the image, its composition, and its style",
                 "imageType": "The type of image (e.g., Photograph, Illustration, Digital Art, 3D Render, Anime, etc.)",
                 "style": {
                   "primary": "main style description",
