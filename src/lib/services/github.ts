@@ -160,27 +160,16 @@ export class GitHubService {
     const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
 
     try {
-      // Try to get existing file first
-      const existingFile = await this.request(
-        `/repos/${this.owner}/${this.repo}/contents/${path}`
-      ).then(res => res.json()).catch(() => null);
-
-      const method = existingFile ? 'PUT' : 'PUT';
-      const body: any = {
-        message: `Update metadata: ${path}`,
-        content,
-        branch: 'main',
-      };
-
-      if (existingFile) {
-        body.sha = existingFile.sha;
-      }
-
+      // Create the file directly without checking if it exists
       await this.request(
         `/repos/${this.owner}/${this.repo}/contents/${path}`,
         {
-          method,
-          body: JSON.stringify(body)
+          method: 'PUT',
+          body: JSON.stringify({
+            message: `Update metadata: ${path}`,
+            content,
+            branch: 'main'
+          })
         }
       );
     } catch (error) {
