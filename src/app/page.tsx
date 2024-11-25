@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { getRoute } from "@/lib/utils"
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <p className="text-xl mb-8">Curated Midjourney Style Library</p>
       <div className="flex gap-4">
         <Link 
-          href="/admin" 
+          href={getRoute('/admin')}
           className="px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors"
         >
           Go to Admin

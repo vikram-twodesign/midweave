@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/midweave',
+  basePath: process.env.NODE_ENV === 'production' ? '/midweave' : '',
   images: {
     unoptimized: true,
   }
