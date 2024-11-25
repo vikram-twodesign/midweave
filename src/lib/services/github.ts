@@ -54,6 +54,85 @@ export class GitHubService {
     }
   }
 
+  async listEntries(): Promise<any[]> {
+    try {
+      console.log('Fetching entries from GitHub...');
+      
+      // Get the contents of the data/entries directory
+      const response = await this.request(
+        `/repos/${this.owner}/${this.repo}/contents/data/entries`
+      );
+      const files = await response.json();
+      
+      // Filter for .json files and fetch their contents
+      const jsonFiles = files.filter((file: any) => 
+        file.name.endsWith('.json') && file.name !== '.gitkeep'
+      );
+      
+      console.log(`Found ${jsonFiles.length} entry files`);
+      
+      // Fetch the content of each file
+      const entries = await Promise.all(
+        jsonFiles.map(async (file: any) => {
+          const contentResponse = await this.request(file.url);
+          const contentData = await contentResponse.json();
+          const content = JSON.parse(
+            Buffer.from(contentData.content, 'base64').toString('utf-8')
+          );
+          return content;
+        })
+      );
+      
+      console.log('Successfully fetched all entries');
+      return entries;
+    } catch (error) {
+      console.error('Error listing entries:', error);
+      return [];
+    }
+  }
+
+  async saveMetadata(data: any, path: string): Promise<void> {
+    const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+
+    try {
+      // First try to get the file to see if it exists
+      let sha: string | undefined;
+      try {
+        const response = await this.request(
+          `/repos/${this.owner}/${this.repo}/contents/${path}`
+        );
+        const fileData = await response.json();
+        sha = fileData.sha;
+      } catch (error) {
+        // File doesn't exist, which is fine for new files
+        console.log(`File ${path} doesn't exist yet, creating new file`);
+      }
+
+      // Create or update the file
+      const body: any = {
+        message: sha ? `Update metadata: ${path}` : `Create metadata: ${path}`,
+        content,
+        branch: 'main'
+      };
+
+      // Only include sha if we're updating an existing file
+      if (sha) {
+        body.sha = sha;
+      }
+
+      await this.request(
+        `/repos/${this.owner}/${this.repo}/contents/${path}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(body)
+        }
+      );
+    } catch (error) {
+      console.error('Error saving metadata:', error);
+      throw new Error('Failed to save metadata');
+    }
+  }
+
   async uploadImage(file: File, path: string): Promise<string> {
     try {
       console.log(`Starting upload for file: ${file.name} to path: ${path}`);
@@ -159,28 +238,6 @@ export class GitHubService {
       console.error('Error uploading image:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       throw new Error(`Failed to upload image: ${errorMessage}`);
-    }
-  }
-
-  async saveMetadata(data: any, path: string): Promise<void> {
-    const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
-
-    try {
-      // Create the file directly without checking if it exists
-      await this.request(
-        `/repos/${this.owner}/${this.repo}/contents/${path}`,
-        {
-          method: 'PUT',
-          body: JSON.stringify({
-            message: `Update metadata: ${path}`,
-            content,
-            branch: 'main'
-          })
-        }
-      );
-    } catch (error) {
-      console.error('Error saving metadata:', error);
-      throw new Error('Failed to save metadata');
     }
   }
 } 

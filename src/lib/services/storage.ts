@@ -36,6 +36,39 @@ const convertToApiEntry = (entry: ImageEntry & { id: number }): ImageEntryWithAn
   };
 };
 
+// Initialize function to sync with GitHub
+const initializeFromGitHub = async () => {
+  try {
+    console.log('Initializing from GitHub...');
+    const entries = await github.listEntries();
+    
+    if (entries && entries.length > 0) {
+      console.log(`Found ${entries.length} entries in GitHub`);
+      
+      // Convert dates from ISO strings to Date objects
+      const processedEntries = entries.map(entry => ({
+        ...entry,
+        createdAt: new Date(entry.createdAt),
+        lastModified: new Date(entry.lastModified)
+      }));
+
+      // Update local database
+      await db.transaction('rw', db.entries, async () => {
+        // Clear existing entries
+        await db.entries.clear();
+        // Add all entries from GitHub
+        await db.entries.bulkAdd(processedEntries);
+      });
+      
+      console.log('Local database synchronized with GitHub');
+    } else {
+      console.log('No entries found in GitHub');
+    }
+  } catch (error) {
+    console.error('Error initializing from GitHub:', error);
+  }
+};
+
 // Upload images function
 export const uploadImages = async (files: File[]): Promise<string[]> => {
   try {
@@ -107,57 +140,14 @@ export const saveEntry = async (entry: {
   }
 };
 
-export const updateEntry = async (
-  id: string,
-  updates: Partial<Omit<ImageEntry, 'id' | 'createdAt'>> & { lastModified?: Date }
-): Promise<string> => {
-  try {
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error('Invalid ID format');
-    }
-    
-    const updatedEntry = {
-      ...updates,
-      lastModified: new Date()
-    };
-    
-    await db.updateEntry(numericId, updatedEntry);
-
-    // Update metadata in GitHub
-    const entry = await db.entries.get(numericId);
-    if (entry) {
-      await github.saveMetadata({
-        id: id,
-        ...entry,
-        ...updatedEntry,
-        createdAt: entry.createdAt.toISOString(),
-        lastModified: updatedEntry.lastModified.toISOString()
-      }, `data/entries/${id}.json`);
-    }
-
-    return id;
-  } catch (error) {
-    console.error('Error updating entry:', error);
-    throw new Error('Failed to update entry');
-  }
-};
-
-export const deleteEntry = async (id: string): Promise<void> => {
-  try {
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error('Invalid ID format');
-    }
-    await db.deleteEntry(numericId);
-  } catch (error) {
-    console.error('Error deleting entry:', error);
-    throw new Error('Failed to delete entry');
-  }
-};
-
 export const getAllEntries = async (): Promise<ImageEntryWithAnalysis[]> => {
   try {
+    // Initialize from GitHub if the local database is empty
+    const count = await db.entries.count();
+    if (count === 0) {
+      await initializeFromGitHub();
+    }
+    
     const entries = await db.getAllEntries();
     return entries.map(entry => convertToApiEntry(entry as ImageEntry & { id: number }));
   } catch (error) {
@@ -168,6 +158,12 @@ export const getAllEntries = async (): Promise<ImageEntryWithAnalysis[]> => {
 
 export const getFeaturedEntries = async (): Promise<ImageEntryWithAnalysis[]> => {
   try {
+    // Make sure we're synced with GitHub
+    const count = await db.entries.count();
+    if (count === 0) {
+      await initializeFromGitHub();
+    }
+    
     const entries = await db.getFeaturedEntries();
     return entries.map(entry => convertToApiEntry(entry as ImageEntry & { id: number }));
   } catch (error) {
@@ -178,6 +174,12 @@ export const getFeaturedEntries = async (): Promise<ImageEntryWithAnalysis[]> =>
 
 export const searchEntries = async (query: string): Promise<ImageEntryWithAnalysis[]> => {
   try {
+    // Make sure we're synced with GitHub
+    const count = await db.entries.count();
+    if (count === 0) {
+      await initializeFromGitHub();
+    }
+    
     const entries = await db.searchEntries(query);
     return entries.map(entry => convertToApiEntry(entry as ImageEntry & { id: number }));
   } catch (error) {

@@ -167,6 +167,96 @@ export function LibraryView() {
     }
   }
 
+  const renderImageDetails = (entry: ImageEntryWithAnalysis) => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Image Details</h3>
+          <div className="space-y-2">
+            <div>
+              <span className="font-medium">Title:</span> {entry.title || 'Untitled'}
+            </div>
+            <div>
+              <span className="font-medium">Description:</span> {entry.description || 'No description'}
+            </div>
+            <div>
+              <span className="font-medium">Created:</span>{' '}
+              {new Date(entry.adminMetadata.createdAt).toLocaleDateString()}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">AI Analysis</h3>
+          <div className="space-y-2">
+            <div>
+              <span className="font-medium">Description:</span>{' '}
+              {entry.aiAnalysis.description}
+            </div>
+            <div>
+              <span className="font-medium">Style:</span>{' '}
+              {entry.aiAnalysis.style.primary}
+              {entry.aiAnalysis.style.secondary.length > 0 && (
+                <span className="text-sm text-muted-foreground">
+                  {' '}
+                  ({entry.aiAnalysis.style.secondary.join(', ')})
+                </span>
+              )}
+            </div>
+            <div>
+              <span className="font-medium">Technical:</span>{' '}
+              {entry.aiAnalysis.technical.quality}, {entry.aiAnalysis.technical.renderStyle}
+            </div>
+            <div>
+              <span className="font-medium">Tags:</span>{' '}
+              <span className="text-sm">
+                {[
+                  ...entry.aiAnalysis.tags.style,
+                  ...entry.aiAnalysis.tags.technical,
+                  ...entry.aiAnalysis.tags.mood,
+                ].join(', ')}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-2">Midjourney Parameters</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div>
+              <span className="font-medium">Style Reference:</span>{' '}
+              {entry.parameters.sref || 'None'}
+            </div>
+            <div>
+              <span className="font-medium">Prompt:</span>{' '}
+              {entry.parameters.prompt || 'None'}
+            </div>
+            <div>
+              <span className="font-medium">Style:</span>{' '}
+              {entry.parameters.style || 'None'}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div>
+              <span className="font-medium">Aspect Ratio:</span>{' '}
+              {entry.parameters.ar || 'Default'}
+            </div>
+            <div>
+              <span className="font-medium">Version:</span>{' '}
+              {entry.parameters.version || 'Default'}
+            </div>
+            <div>
+              <span className="font-medium">Quality:</span>{' '}
+              {entry.parameters.quality || 'Default'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[400px]">
