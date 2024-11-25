@@ -95,6 +95,28 @@ export class GitHubService {
     const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
 
     try {
+      // Ensure the directory exists
+      const dirPath = path.split('/').slice(0, -1).join('/');
+      try {
+        await this.request(
+          `/repos/${this.owner}/${this.repo}/contents/${dirPath}`
+        );
+      } catch (error) {
+        // Directory doesn't exist, create it with a .gitkeep file
+        console.log(`Creating directory: ${dirPath}`);
+        await this.request(
+          `/repos/${this.owner}/${this.repo}/contents/${dirPath}/.gitkeep`,
+          {
+            method: 'PUT',
+            body: JSON.stringify({
+              message: `Create directory: ${dirPath}`,
+              content: '',
+              branch: 'main'
+            })
+          }
+        );
+      }
+
       // First try to get the file to see if it exists
       let sha: string | undefined;
       try {

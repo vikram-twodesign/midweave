@@ -1,11 +1,18 @@
 import OpenAI from 'openai';
 import { AIAnalysis } from '@/lib/types/schema';
+import { config } from '@/lib/config';
 
-// Initialize OpenAI client
-const client = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-});
+// Initialize OpenAI client only if API key is available
+const getOpenAIClient = () => {
+  const apiKey = config.openai.apiKey;
+  if (!apiKey) {
+    throw new Error('OpenAI API key is not configured');
+  }
+  return new OpenAI({
+    apiKey,
+    dangerouslyAllowBrowser: true
+  });
+};
 
 // Helper function to convert File to base64
 const fileToBase64 = async (file: File): Promise<string> => {
@@ -23,6 +30,7 @@ const fileToBase64 = async (file: File): Promise<string> => {
 // Main analysis function
 export async function analyzeImage(file: File): Promise<AIAnalysis> {
   try {
+    const client = getOpenAIClient();
     const base64Image = await fileToBase64(file);
     const imageUrl = `data:image/jpeg;base64,${base64Image}`;
 
