@@ -1,0 +1,73 @@
+{
+  "id": 2,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732556265878_00000326_photo_2024_11_17_09_40_23.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732556265878_00000326_photo_2024_11_17_09_40_23.jpg",
+      "size": 149356
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 4050681897992",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "A vibrant and playful grid of illustrated icons representing various fun and nostalgic elements, set against a purple gradient background. The style is cartoonish, emphasizing bold outlines and bright colors.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Cartoon",
+      "secondary": [
+        "Pop Art",
+        "Retro"
+      ],
+      "influences": [
+        "80s aesthetics",
+        "Video game culture"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with clear details",
+      "renderStyle": "2D vector art",
+      "detailLevel": "Moderate detail with emphasis on key features",
+      "lighting": "Flat lighting with vibrant color saturation"
+    },
+    "colors": {
+      "palette": [
+        "#FF00FF",
+        "#FF7F50",
+        "#FFD700"
+      ],
+      "mood": "Playful and energetic",
+      "contrast": "High contrast between elements and background"
+    },
+    "tags": {
+      "style": [
+        "cartoon",
+        "illustration",
+        "nostalgic"
+      ],
+      "technical": [
+        "vector",
+        "colorful",
+        "high quality"
+      ],
+      "mood": [
+        "fun",
+        "playful",
+        "vibrant"
+      ]
+    }
+  },
+  "createdAt": "2024-11-25T17:37:49.655Z",
+  "lastModified": "2024-11-25T17:37:49.655Z",
+  "featured": false,
+  "curatorNotes": ""
+}
