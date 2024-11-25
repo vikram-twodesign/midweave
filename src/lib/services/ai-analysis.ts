@@ -3,7 +3,7 @@ import { AIAnalysis } from '@/lib/types/schema';
 
 // Initialize OpenAI client
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true
 });
 

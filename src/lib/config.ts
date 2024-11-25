@@ -7,7 +7,7 @@ export const config = {
     branch: process.env.NEXT_PUBLIC_BRANCH || 'main',
   },
   openai: {
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
   },
 } as const;
 
@@ -16,7 +16,7 @@ const requiredEnvVars = [
   'MW_CLIENT_ID',
   'MW_CLIENT_SECRET',
   'MW_ACCESS_TOKEN',
-  'OPENAI_API_KEY',
+  'NEXT_PUBLIC_OPENAI_API_KEY',
 ] as const;
 
 for (const envVar of requiredEnvVars) {

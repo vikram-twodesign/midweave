@@ -39,7 +39,7 @@ jobs:
           MW_CLIENT_ID: ${{ secrets.MW_CLIENT_ID }}
           MW_CLIENT_SECRET: ${{ secrets.MW_CLIENT_SECRET }}
           MW_ACCESS_TOKEN: ${{ secrets.MW_ACCESS_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          NEXT_PUBLIC_OPENAI_API_KEY: ${{ secrets.NEXT_PUBLIC_OPENAI_API_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
