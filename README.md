@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Midweave Gallery
 
 A curated Midjourney style library for managing and showcasing AI-generated artwork.
@@ -32,17 +31,28 @@ A curated Midjourney style library for managing and showcasing AI-generated artw
 npm install
 ```
 
-2. Create `.env.local` file with required environment variables.
+2. Create `.env.local` file with required environment variables:
+```
+NEXT_PUBLIC_REPOSITORY=your-username/your-repo
+NEXT_PUBLIC_MW_ACCESS_TOKEN=your-github-token
+NEXT_PUBLIC_BRANCH=main
+NEXT_PUBLIC_OPENAI_API_KEY=your-openai-key
+```
 
 3. Run the development server:
 ```bash
 npm run dev
 ```
 
+## Deployment
+
+The app is automatically deployed to GitHub Pages when changes are pushed to the main branch. To deploy manually:
+
+1. Set up GitHub repository secrets (see above environment variables)
+2. Push changes to the main branch
+3. GitHub Actions will build and deploy automatically
+4. Visit your GitHub Pages URL to see the deployed app
+
 ## License
 
 MIT License - See LICENSE file for details
-=======
-# midweave
-A curated Midjourney style library
->>>>>>> 9b8c1fe480007e789a55b78c5dc1a7ee3ce94909
