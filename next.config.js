@@ -4,10 +4,7 @@ const nextConfig = {
   basePath: '/midweave',
   images: {
     unoptimized: true,
-  },
-  experimental: {
-    appDir: true,
-  },
+  }
 }
 
 module.exports = nextConfig 

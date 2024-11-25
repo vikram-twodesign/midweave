@@ -69,6 +69,21 @@ class MidweaveDB extends Dexie {
     this.version(1).stores({
       entries: '++id, title, createdAt, lastModified, featured, [parameters.sref]'
     });
+
+    // Define mappings
+    this.entries.hook('creating', function (primKey, obj) {
+      // Convert boolean to number for indexing
+      if (typeof obj.featured === 'boolean') {
+        obj.featured = obj.featured ? 1 : 0;
+      }
+    });
+
+    this.entries.hook('updating', function (modifications, primKey, obj) {
+      // Convert boolean to number for indexing
+      if (typeof modifications.featured === 'boolean') {
+        modifications.featured = modifications.featured ? 1 : 0;
+      }
+    });
   }
 
   // Helper methods
@@ -103,7 +118,7 @@ class MidweaveDB extends Dexie {
   }
 
   async getFeaturedEntries(): Promise<ImageEntry[]> {
-    return await this.entries.where('featured').equals(true).toArray();
+    return await this.entries.where('featured').equals(1).toArray();
   }
 
   async searchEntries(query: string): Promise<ImageEntry[]> {
