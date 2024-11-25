@@ -6,18 +6,24 @@ export class GitHubService {
   private repo: string;
 
   constructor() {
-    const [owner, repo] = (process.env.NEXT_PUBLIC_REPOSITORY || '').split('/');
-    if (!owner || !repo) {
-      throw new Error('NEXT_PUBLIC_REPOSITORY environment variable must be set in format "owner/repo"');
+    const repository = config.github.repository;
+    if (!repository) {
+      throw new Error('Repository configuration is missing');
     }
+    
+    const [owner, repo] = repository.split('/');
+    if (!owner || !repo) {
+      throw new Error('Repository must be in format "owner/repo"');
+    }
+    
     this.owner = owner;
     this.repo = repo;
   }
 
   private async request(endpoint: string, options: RequestInit = {}) {
-    const token = process.env.NEXT_PUBLIC_MW_ACCESS_TOKEN;
+    const token = config.github.accessToken;
     if (!token) {
-      throw new Error('NEXT_PUBLIC_MW_ACCESS_TOKEN environment variable must be set');
+      throw new Error('GitHub access token is missing');
     }
 
     const url = `${this.baseUrl}${endpoint}`;
