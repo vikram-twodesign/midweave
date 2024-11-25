@@ -1,0 +1,73 @@
+{
+  "id": 3,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732542843785_00000099_photo_2024_09_21_09_20_48.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732542843785_00000099_photo_2024_09_21_09_20_48.jpg",
+      "size": 115698
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 97359450890",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image features a split-panel design with four distinct illustrations, each characterized by a striking yellow background. The style blends elements of portraiture and cartoon art, showcasing expressive figures and whimsical designs.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Contemporary Cartoon",
+      "secondary": [
+        "Character Design",
+        "Pop Art"
+      ],
+      "influences": [
+        "Graphic Novels",
+        "Street Art"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with clear lines and vibrant colors",
+      "renderStyle": "Digital illustration",
+      "detailLevel": "Moderate detail with stylized features",
+      "lighting": "Flat lighting with a uniform yellow tone"
+    },
+    "colors": {
+      "palette": [
+        "#F6EB61",
+        "#000000",
+        "#FFFFFF"
+      ],
+      "mood": "Playful and whimsical",
+      "contrast": "High contrast between the characters and the background"
+    },
+    "tags": {
+      "style": [
+        "cartoon",
+        "illustration",
+        "whimsical"
+      ],
+      "technical": [
+        "digital",
+        "high quality",
+        "vector"
+      ],
+      "mood": [
+        "playful",
+        "expressive",
+        "vibrant"
+      ]
+    }
+  },
+  "createdAt": "2024-11-25T13:54:07.590Z",
+  "lastModified": "2024-11-25T13:54:07.590Z",
+  "featured": false,
+  "curatorNotes": ""
+}
