@@ -1,0 +1,73 @@
+{
+  "id": 5,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732550049691_00000207_photo_2024_10_07_00_30_27.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732550049691_00000207_photo_2024_10_07_00_30_27.jpg",
+      "size": 57649
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 97359450667",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "A serene and atmospheric landscape featuring layered mountains and a calm water body, depicted in soft, muted tones. The composition is divided into four quadrants, each showcasing varying perspectives of the tranquil scenery.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Minimalist Landscape",
+      "secondary": [
+        "Abstract",
+        "Atmospheric"
+      ],
+      "influences": [
+        "Contemporary Art",
+        "Impressionism"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with smooth gradients and soft edges",
+      "renderStyle": "Vector-based rendering",
+      "detailLevel": "Moderate detail with emphasis on form and color rather than intricate features",
+      "lighting": "Soft, diffused lighting creating a hazy effect"
+    },
+    "colors": {
+      "palette": [
+        "#A1C6D4",
+        "#6D8E99",
+        "#3B5C7A"
+      ],
+      "mood": "Calm and tranquil",
+      "contrast": "Low contrast creating a soothing visual experience"
+    },
+    "tags": {
+      "style": [
+        "landscape",
+        "minimalism",
+        "abstract"
+      ],
+      "technical": [
+        "digital",
+        "vector",
+        "gradient"
+      ],
+      "mood": [
+        "calm",
+        "serene",
+        "contemplative"
+      ]
+    }
+  },
+  "createdAt": "2024-11-25T15:54:14.242Z",
+  "lastModified": "2024-11-25T15:54:14.242Z",
+  "featured": false,
+  "curatorNotes": ""
+}
