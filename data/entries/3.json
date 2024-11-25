@@ -4,13 +4,13 @@
   "description": "",
   "images": [
     {
-      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732542843785_00000099_photo_2024_09_21_09_20_48.jpg",
-      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732542843785_00000099_photo_2024_09_21_09_20_48.jpg",
-      "size": 115698
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732559013090_00000320_photo_2024_11_16_09_21_12.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732559013090_00000320_photo_2024_11_16_09_21_12.jpg",
+      "size": 193983
     }
   ],
   "parameters": {
-    "sref": "--sref 97359450890",
+    "sref": "--sref 40506815477657",
     "prompt": "",
     "style": "",
     "ar": "",
@@ -20,54 +20,55 @@
     "stylize": null
   },
   "aiAnalysis": {
-    "description": "The image features a split-panel design with four distinct illustrations, each characterized by a striking yellow background. The style blends elements of portraiture and cartoon art, showcasing expressive figures and whimsical designs.",
-    "imageType": "Illustration",
+    "description": "The image is a vibrant collage composed of nine distinct illustrations, each representing a unique theme ranging from nature to pop culture. The overall aesthetic is reminiscent of retro-futurism, with a strong emphasis on color and detail.",
+    "imageType": "Digital Art",
     "style": {
-      "primary": "Contemporary Cartoon",
+      "primary": "Retro-Futurism",
       "secondary": [
-        "Character Design",
-        "Pop Art"
+        "Surrealism",
+        "Fantasy"
       ],
       "influences": [
-        "Graphic Novels",
-        "Street Art"
+        "Japanese pop culture",
+        "Nature illustration",
+        "Classic cinema"
       ]
     },
     "technical": {
-      "quality": "High quality with clear lines and vibrant colors",
-      "renderStyle": "Digital illustration",
-      "detailLevel": "Moderate detail with stylized features",
-      "lighting": "Flat lighting with a uniform yellow tone"
+      "quality": "High quality with sharp details and vibrant colors",
+      "renderStyle": "Vector art",
+      "detailLevel": "Very detailed",
+      "lighting": "Soft, diffused lighting enhances the colors"
     },
     "colors": {
       "palette": [
-        "#F6EB61",
-        "#000000",
-        "#FFFFFF"
+        "#A8E6CE",
+        "#FF8C94",
+        "#FFD3B6"
       ],
       "mood": "Playful and whimsical",
-      "contrast": "High contrast between the characters and the background"
+      "contrast": "Moderate contrast that maintains harmony"
     },
     "tags": {
       "style": [
-        "cartoon",
+        "collage",
         "illustration",
-        "whimsical"
+        "retro"
       ],
       "technical": [
-        "digital",
         "high quality",
-        "vector"
+        "vector",
+        "detailed"
       ],
       "mood": [
+        "vibrant",
         "playful",
-        "expressive",
-        "vibrant"
+        "surreal"
       ]
     }
   },
-  "createdAt": "2024-11-25T13:54:07.590Z",
-  "lastModified": "2024-11-25T13:54:07.590Z",
+  "createdAt": "2024-11-25T18:23:36.727Z",
+  "lastModified": "2024-11-25T18:23:36.727Z",
   "featured": false,
   "curatorNotes": ""
 }
