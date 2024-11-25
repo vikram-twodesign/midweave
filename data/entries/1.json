@@ -1,0 +1,73 @@
+{
+  "id": 1,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732554009833_00000321_photo_2024_11_16_17_30_29.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732554009833_00000321_photo_2024_11_16_17_30_29.jpg",
+      "size": 291025
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 40506815990",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image features a vibrant, multi-panel composition blending surrealism and abstract elements, showcasing figures and organic shapes in a dreamlike setting. The use of bold colors and intricate designs creates a captivating visual narrative.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Surrealism",
+      "secondary": [
+        "Abstract",
+        "Pop Art"
+      ],
+      "influences": [
+        "Psychedelic Art",
+        "Contemporary Illustration"
+      ]
+    },
+    "technical": {
+      "quality": "High-resolution with sharp details",
+      "renderStyle": "Vector-based rendering",
+      "detailLevel": "Highly detailed with intricate patterns",
+      "lighting": "Soft, diffused lighting with glowing elements"
+    },
+    "colors": {
+      "palette": [
+        "#FF5D8A",
+        "#A52B9A",
+        "#4B0082"
+      ],
+      "mood": "Vibrant and whimsical",
+      "contrast": "High contrast between bright colors and dark backgrounds"
+    },
+    "tags": {
+      "style": [
+        "surreal",
+        "abstract",
+        "illustration"
+      ],
+      "technical": [
+        "high-resolution",
+        "vector art",
+        "detailed"
+      ],
+      "mood": [
+        "whimsical",
+        "vibrant",
+        "dreamlike"
+      ]
+    }
+  },
+  "createdAt": "2024-11-25T17:00:14.671Z",
+  "lastModified": "2024-11-25T17:00:14.671Z",
+  "featured": false,
+  "curatorNotes": ""
+}
