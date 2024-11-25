@@ -1,0 +1,7 @@
+# Gallery Entries
+
+This directory contains JSON files for each gallery entry, including:
+- Image metadata
+- AI analysis results
+- Style parameters
+- Curator notes

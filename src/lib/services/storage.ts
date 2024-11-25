@@ -1,6 +1,9 @@
 import { db } from '@/lib/db';
-import { ImageEntryWithAnalysis, AIAnalysis } from '@/lib/types/schema';
 import type { ImageEntry } from '@/lib/db';
+import { ImageEntryWithAnalysis, AIAnalysis } from '@/lib/types/schema';
+import { GitHubService } from './github';
+
+const github = new GitHubService();
 
 // Helper function to convert File to Base64
 const fileToBase64 = (file: File): Promise<string> => {
@@ -37,9 +40,12 @@ const convertToApiEntry = (entry: ImageEntry & { id: number }): ImageEntryWithAn
 export const uploadImages = async (files: File[]): Promise<string[]> => {
   try {
     const urls = await Promise.all(
-      files.map(async (file) => {
-        const base64 = await fileToBase64(file);
-        return base64;
+      files.map(async (file, index) => {
+        const timestamp = Date.now();
+        const safeName = file.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+        const path = `images/originals/${timestamp}_${safeName}`;
+        
+        return await github.uploadImage(file, path);
       })
     );
     return urls;
@@ -85,6 +91,15 @@ export const saveEntry = async (entry: {
     };
     
     const id = await db.addEntry(newEntry);
+
+    // Save metadata to GitHub
+    await github.saveMetadata({
+      id: id.toString(),
+      ...newEntry,
+      createdAt: newEntry.createdAt.toISOString(),
+      lastModified: newEntry.lastModified.toISOString()
+    }, `data/entries/${id}.json`);
+
     return id.toString();
   } catch (error) {
     console.error('Error saving entry:', error);
@@ -108,6 +123,19 @@ export const updateEntry = async (
     };
     
     await db.updateEntry(numericId, updatedEntry);
+
+    // Update metadata in GitHub
+    const entry = await db.entries.get(numericId);
+    if (entry) {
+      await github.saveMetadata({
+        id: id,
+        ...entry,
+        ...updatedEntry,
+        createdAt: entry.createdAt.toISOString(),
+        lastModified: updatedEntry.lastModified.toISOString()
+      }, `data/entries/${id}.json`);
+    }
+
     return id;
   } catch (error) {
     console.error('Error updating entry:', error);
