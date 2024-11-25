@@ -6,15 +6,23 @@ export class GitHubService {
   private repo: string;
 
   constructor() {
-    const [owner, repo] = (process.env.NEXT_PUBLIC_REPOSITORY || 'owner/repo').split('/');
+    const [owner, repo] = (process.env.NEXT_PUBLIC_REPOSITORY || '').split('/');
+    if (!owner || !repo) {
+      throw new Error('NEXT_PUBLIC_REPOSITORY environment variable must be set in format "owner/repo"');
+    }
     this.owner = owner;
     this.repo = repo;
   }
 
   private async request(endpoint: string, options: RequestInit = {}) {
+    const token = process.env.NEXT_PUBLIC_MW_ACCESS_TOKEN;
+    if (!token) {
+      throw new Error('NEXT_PUBLIC_MW_ACCESS_TOKEN environment variable must be set');
+    }
+
     const url = `${this.baseUrl}${endpoint}`;
     const headers = {
-      'Authorization': `Bearer ${process.env.MW_ACCESS_TOKEN}`,
+      'Authorization': `Bearer ${token}`,
       'Accept': 'application/vnd.github.v3+json',
       ...options.headers,
     };
