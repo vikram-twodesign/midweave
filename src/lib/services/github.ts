@@ -31,6 +31,10 @@ export class GitHubService {
         throw new Error('Path points to a directory, not a file');
       }
 
+      if (response.data.type !== 'file') {
+        throw new Error('Path does not point to a file');
+      }
+
       return {
         content: Buffer.from(response.data.content, 'base64').toString('utf8'),
         sha: response.data.sha,
