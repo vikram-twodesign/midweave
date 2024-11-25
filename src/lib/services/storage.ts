@@ -215,3 +215,62 @@ export const deleteEntries = async (ids: number[]): Promise<void> => {
     throw new Error('Failed to delete entries');
   }
 };
+
+export const updateEntry = async (
+  id: string,
+  updates: Partial<Omit<ImageEntry, 'id' | 'createdAt'>> & { lastModified?: Date }
+): Promise<string> => {
+  try {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    
+    const updatedEntry = {
+      ...updates,
+      lastModified: new Date()
+    };
+    
+    await db.updateEntry(numericId, updatedEntry);
+
+    // Update metadata in GitHub
+    const entry = await db.entries.get(numericId);
+    if (entry) {
+      await github.saveMetadata({
+        id: id,
+        ...entry,
+        ...updatedEntry,
+        createdAt: entry.createdAt.toISOString(),
+        lastModified: updatedEntry.lastModified.toISOString()
+      }, `data/entries/${id}.json`);
+    }
+
+    return id;
+  } catch (error) {
+    console.error('Error updating entry:', error);
+    throw new Error('Failed to update entry');
+  }
+};
+
+export const deleteEntry = async (id: string): Promise<void> => {
+  try {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+
+    // Delete from GitHub first
+    try {
+      await github.deleteFile(`data/entries/${id}.json`);
+    } catch (error) {
+      console.error('Error deleting file from GitHub:', error);
+      // Continue with local deletion even if GitHub deletion fails
+    }
+
+    // Then delete from local database
+    await db.deleteEntry(numericId);
+  } catch (error) {
+    console.error('Error deleting entry:', error);
+    throw new Error('Failed to delete entry');
+  }
+};

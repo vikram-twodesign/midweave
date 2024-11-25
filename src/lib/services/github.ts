@@ -240,4 +240,31 @@ export class GitHubService {
       throw new Error(`Failed to upload image: ${errorMessage}`);
     }
   }
+
+  async deleteFile(path: string): Promise<void> {
+    try {
+      // First get the file's SHA
+      const response = await this.request(
+        `/repos/${this.owner}/${this.repo}/contents/${path}`
+      );
+      const fileData = await response.json();
+      const sha = fileData.sha;
+
+      // Delete the file
+      await this.request(
+        `/repos/${this.owner}/${this.repo}/contents/${path}`,
+        {
+          method: 'DELETE',
+          body: JSON.stringify({
+            message: `Delete file: ${path}`,
+            sha,
+            branch: 'main'
+          })
+        }
+      );
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      throw new Error('Failed to delete file');
+    }
+  }
 } 
