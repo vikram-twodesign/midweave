@@ -143,7 +143,8 @@ export class GitHubService {
       return imageUrl;
     } catch (error) {
       console.error('Error uploading image:', error);
-      throw new Error(`Failed to upload image: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      throw new Error(`Failed to upload image: ${errorMessage}`);
     }
   }
 
