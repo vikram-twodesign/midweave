@@ -19,99 +19,132 @@ export class GitHubService {
       ...options.headers,
     };
 
-    const response = await fetch(url, { ...options, headers });
-    
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.statusText}`);
-    }
+    try {
+      console.log(`Making GitHub API request to: ${endpoint}`);
+      const response = await fetch(url, { ...options, headers });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('GitHub API error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        });
+        throw new Error(`GitHub API error: ${response.status} ${response.statusText} - ${errorText}`);
+      }
 
-    return response;
+      return response;
+    } catch (error) {
+      console.error('GitHub API request failed:', error);
+      throw error;
+    }
   }
 
   async uploadImage(file: File, path: string): Promise<string> {
-    // Convert file to base64
-    const base64Content = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = (reader.result as string).split(',')[1];
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+    try {
+      console.log(`Starting upload for file: ${file.name} to path: ${path}`);
 
-    // Get current commit SHA
-    const refResponse = await this.request(
-      `/repos/${this.owner}/${this.repo}/git/refs/heads/main`
-    );
-    const refData = await refResponse.json();
-    const latestCommitSha = refData.object.sha;
+      // Convert file to base64
+      const base64Content = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = (reader.result as string).split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
-    // Create blob
-    const blobResponse = await this.request(
-      `/repos/${this.owner}/${this.repo}/git/blobs`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          content: base64Content,
-          encoding: 'base64'
-        })
-      }
-    );
-    const blobData = await blobResponse.json();
+      console.log('File converted to base64');
 
-    // Get current tree
-    const treeResponse = await this.request(
-      `/repos/${this.owner}/${this.repo}/git/trees/${latestCommitSha}`
-    );
-    const treeData = await treeResponse.json();
+      // Get current commit SHA
+      const refResponse = await this.request(
+        `/repos/${this.owner}/${this.repo}/git/refs/heads/main`
+      );
+      const refData = await refResponse.json();
+      const latestCommitSha = refData.object.sha;
 
-    // Create new tree
-    const newTreeResponse = await this.request(
-      `/repos/${this.owner}/${this.repo}/git/trees`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          base_tree: treeData.sha,
-          tree: [{
-            path,
-            mode: '100644',
-            type: 'blob',
-            sha: blobData.sha
-          }]
-        })
-      }
-    );
-    const newTreeData = await newTreeResponse.json();
+      console.log('Got latest commit SHA:', latestCommitSha);
 
-    // Create commit
-    const commitResponse = await this.request(
-      `/repos/${this.owner}/${this.repo}/git/commits`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          message: `Add image: ${path}`,
-          tree: newTreeData.sha,
-          parents: [latestCommitSha]
-        })
-      }
-    );
-    const commitData = await commitResponse.json();
+      // Create blob
+      const blobResponse = await this.request(
+        `/repos/${this.owner}/${this.repo}/git/blobs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            content: base64Content,
+            encoding: 'base64'
+          })
+        }
+      );
+      const blobData = await blobResponse.json();
 
-    // Update reference
-    await this.request(
-      `/repos/${this.owner}/${this.repo}/git/refs/heads/main`,
-      {
-        method: 'PATCH',
-        body: JSON.stringify({
-          sha: commitData.sha,
-          force: true
-        })
-      }
-    );
+      console.log('Created blob:', blobData.sha);
 
-    // Return the raw URL for the image
-    return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/main/${path}`;
+      // Get current tree
+      const treeResponse = await this.request(
+        `/repos/${this.owner}/${this.repo}/git/trees/${latestCommitSha}`
+      );
+      const treeData = await treeResponse.json();
+
+      // Create new tree
+      const newTreeResponse = await this.request(
+        `/repos/${this.owner}/${this.repo}/git/trees`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            base_tree: treeData.sha,
+            tree: [{
+              path,
+              mode: '100644',
+              type: 'blob',
+              sha: blobData.sha
+            }]
+          })
+        }
+      );
+      const newTreeData = await newTreeResponse.json();
+
+      console.log('Created new tree:', newTreeData.sha);
+
+      // Create commit
+      const commitResponse = await this.request(
+        `/repos/${this.owner}/${this.repo}/git/commits`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            message: `Add image: ${path}`,
+            tree: newTreeData.sha,
+            parents: [latestCommitSha]
+          })
+        }
+      );
+      const commitData = await commitResponse.json();
+
+      console.log('Created commit:', commitData.sha);
+
+      // Update reference
+      await this.request(
+        `/repos/${this.owner}/${this.repo}/git/refs/heads/main`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify({
+            sha: commitData.sha,
+            force: true
+          })
+        }
+      );
+
+      console.log('Updated reference, upload complete');
+
+      // Return the raw URL for the image
+      const imageUrl = `https://raw.githubusercontent.com/${this.owner}/${this.repo}/main/${path}`;
+      console.log('Image URL:', imageUrl);
+      return imageUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw new Error(`Failed to upload image: ${error.message}`);
+    }
   }
 
   async saveMetadata(data: any, path: string): Promise<void> {

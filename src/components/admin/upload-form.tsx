@@ -255,10 +255,6 @@ export function UploadForm() {
       // Create entry with AI analysis
       const entry = {
         title: data.prompt || "Untitled Style",
-        description: '',
-        createdAt: new Date(),
-        lastModified: new Date(),
-        featured: false,
         images: uploadedImages.map((url: string, index: number) => ({
           url,
           thumbnail: url,
@@ -296,8 +292,8 @@ export function UploadForm() {
       setPreviews([])
       setAiAnalysis({})
       
-      // Redirect to library view
-      router.push(getRoute('/admin?tab=manage'))
+      // Fix: Use correct route path
+      router.push(getRoute('/admin'))
     } catch (error) {
       console.error('Upload error:', error)
       toast({
