@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Midweave Gallery
 
 A curated Midjourney style library for managing and showcasing AI-generated artwork.
@@ -41,3 +42,7 @@ npm run dev
 ## License
 
 MIT License - See LICENSE file for details
+=======
+# midweave
+A curated Midjourney style library
+>>>>>>> 9b8c1fe480007e789a55b78c5dc1a7ee3ce94909
