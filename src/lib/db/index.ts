@@ -12,16 +12,15 @@ export interface ImageEntry {
   
   // Image data
   images: {
-    url: string; // Base64 or Blob URL
+    url: string;
     thumbnail: string;
     size: number;
-    file?: File; // Original file for temporary storage
   }[];
 
   // Midjourney Parameters
   parameters: {
     sref: string;
-    prompt?: string;
+    prompt: string;
     style?: string;
     ar?: string;
     chaos?: number;
@@ -29,12 +28,17 @@ export interface ImageEntry {
     niji?: boolean;
     version?: string;
     tile?: boolean;
+    weird?: number;
+    stop?: number;
     quality?: number;
     stylize?: number;
+    seed?: number;
   };
 
-  // AI Analysis (optional)
+  // AI Analysis
   aiAnalysis?: {
+    description: string;
+    imageType: string;
     style: {
       primary: string;
       secondary: string[];
@@ -69,42 +73,13 @@ class MidweaveDB extends Dexie {
     this.version(1).stores({
       entries: '++id, title, createdAt, lastModified, featured, [parameters.sref]'
     });
-
-    // Define mappings
-    this.entries.hook('creating', function (primKey, obj) {
-      // Convert boolean to number for indexing
-      if (typeof obj.featured === 'boolean') {
-        obj.featured = obj.featured ? 1 : 0;
-      }
-    });
-
-    this.entries.hook('updating', function (modifications, primKey, obj) {
-      // Convert boolean to number for indexing
-      if (typeof modifications.featured === 'boolean') {
-        modifications.featured = modifications.featured ? 1 : 0;
-      }
-    });
   }
 
-  // Helper methods
-  async addEntry(entry: Omit<ImageEntry, 'id' | 'createdAt' | 'lastModified'>): Promise<number> {
-    const now = new Date();
-    const fullEntry: Omit<ImageEntry, 'id'> = {
-      ...entry,
-      createdAt: now,
-      lastModified: now,
-      featured: false
-    };
-    
-    return await this.entries.add(fullEntry);
+  async addEntry(entry: Omit<ImageEntry, 'id'>): Promise<number> {
+    return await this.entries.add(entry);
   }
 
-  async updateEntry(id: number, entry: Partial<ImageEntry>): Promise<number> {
-    const updates = {
-      ...entry,
-      lastModified: new Date()
-    };
-    
+  async updateEntry(id: number, updates: Partial<ImageEntry>): Promise<number> {
     await this.entries.update(id, updates);
     return id;
   }
@@ -118,11 +93,10 @@ class MidweaveDB extends Dexie {
   }
 
   async getFeaturedEntries(): Promise<ImageEntry[]> {
-    return await this.entries.where('featured').equals(1).toArray();
+    return await this.entries.filter(entry => entry.featured).toArray();
   }
 
   async searchEntries(query: string): Promise<ImageEntry[]> {
-    // Simple search implementation - can be enhanced later
     const lowercaseQuery = query.toLowerCase();
     return await this.entries
       .filter(entry => {
@@ -152,7 +126,6 @@ class MidweaveDB extends Dexie {
       .toArray();
   }
 
-  // Export/Import functionality
   async exportData(): Promise<string> {
     const entries = await this.getAllEntries();
     return JSON.stringify(entries);
@@ -170,5 +143,5 @@ class MidweaveDB extends Dexie {
 // Create and export a single instance
 export const db = new MidweaveDB();
 
-// Export a type helper for components
+// Export type helper for components
 export type { Table }; 

@@ -254,6 +254,10 @@ export function UploadForm() {
       // Create entry with AI analysis
       const entry = {
         title: data.prompt || "Untitled Style",
+        description: '',
+        createdAt: new Date(),
+        lastModified: new Date(),
+        featured: false,
         images: uploadedImages.map((url: string, index: number) => ({
           url,
           thumbnail: url,
