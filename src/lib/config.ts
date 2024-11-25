@@ -33,11 +33,10 @@ const getEnvVar = (key: string, fallback?: string): string => {
 // Initialize config object
 export const config = {
   github: {
-    clientId: getEnvVar('MW_CLIENT_ID'),
-    clientSecret: getEnvVar('MW_CLIENT_SECRET'),
-    accessToken: getEnvVar('NEXT_PUBLIC_MW_ACCESS_TOKEN'),
-    repository: getEnvVar('NEXT_PUBLIC_REPOSITORY'),
-    branch: getEnvVar('NEXT_PUBLIC_BRANCH', 'main'),
+    token: process.env.NEXT_PUBLIC_GITHUB_TOKEN || '',
+    owner: 'vikram-twodesign',
+    repo: 'midweave',
+    branch: 'main'
   },
   openai: {
     apiKey: getEnvVar('NEXT_PUBLIC_OPENAI_API_KEY'),

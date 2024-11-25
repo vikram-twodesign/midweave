@@ -5,6 +5,37 @@ import { GitHubService } from './github';
 
 const github = new GitHubService();
 
+const GITHUB_API_BASE_URL = 'https://api.github.com/repos/vikram-twodesign/midweave/contents/data/entries/';
+
+// Add these type definitions at the top of the file, after the imports
+interface GitHubEntry {
+  id: string;
+  createdAt: string;
+  lastModified: string;
+  title: string;
+  description: string;
+  images: { url: string; thumbnail: string; size: number }[];
+  parameters: {
+    sref: string;
+    prompt: string;
+    style?: string;
+    ar?: string;
+    chaos?: number;
+    no?: string[];
+    niji?: boolean;
+    version?: string;
+    tile?: boolean;
+    weird?: number;
+    stop?: number;
+    quality?: number;
+    stylize?: number;
+    seed?: number;
+  };
+  aiAnalysis: AIAnalysis;
+  featured: boolean;
+  curatorNotes: string;
+}
+
 // Helper function to convert File to Base64
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -46,10 +77,11 @@ const initializeFromGitHub = async () => {
       console.log(`Found ${entries.length} entries in GitHub`);
       
       // Convert dates from ISO strings to Date objects
-      const processedEntries = entries.map(entry => ({
+      const processedEntries = entries.map((entry: GitHubEntry) => ({
         ...entry,
         createdAt: new Date(entry.createdAt),
-        lastModified: new Date(entry.lastModified)
+        lastModified: new Date(entry.lastModified),
+        id: parseInt(entry.id)
       }));
 
       // Update local database
@@ -277,3 +309,9 @@ export const deleteEntry = async (id: string): Promise<void> => {
     throw new Error('Failed to delete entry');
   }
 };
+
+// Function to fetch entries
+const fetchEntry = async (entryId: string) => {
+    const response = await fetch(`${GITHUB_API_BASE_URL}${entryId}.json?ref=main`);
+    // ... handle response ...
+}
