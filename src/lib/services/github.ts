@@ -74,20 +74,27 @@ export class GitHubService {
       // Fetch the content of each file
       const entries = await Promise.all(
         jsonFiles.map(async (file: any) => {
-          const contentResponse = await this.request(file.url);
-          const contentData = await contentResponse.json();
-          const content = JSON.parse(
-            Buffer.from(contentData.content, 'base64').toString('utf-8')
-          );
-          return content;
+          try {
+            const contentResponse = await this.request(file.url);
+            const contentData = await contentResponse.json();
+            const content = JSON.parse(
+              Buffer.from(contentData.content, 'base64').toString('utf-8')
+            );
+            return content;
+          } catch (error) {
+            console.error(`Error fetching content for file ${file.name}:`, error);
+            return null;
+          }
         })
       );
       
-      console.log('Successfully fetched all entries');
-      return entries;
+      // Filter out any failed entries
+      const validEntries = entries.filter(entry => entry !== null);
+      console.log(`Successfully fetched ${validEntries.length} valid entries`);
+      return validEntries;
     } catch (error) {
       console.error('Error listing entries:', error);
-      return [];
+      throw new Error('Failed to list entries from GitHub');
     }
   }
 

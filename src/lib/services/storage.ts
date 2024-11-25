@@ -62,11 +62,17 @@ const initializeFromGitHub = async () => {
       
       console.log('Local database synchronized with GitHub');
     } else {
-      console.log('No entries found in GitHub');
+      console.warn('No entries found in GitHub');
     }
   } catch (error) {
     console.error('Error initializing from GitHub:', error);
+    throw new Error('Failed to sync with GitHub');
   }
+};
+
+// Force sync function
+export const forceSyncWithGitHub = async (): Promise<void> => {
+  await initializeFromGitHub();
 };
 
 // Upload images function
@@ -142,11 +148,8 @@ export const saveEntry = async (entry: {
 
 export const getAllEntries = async (): Promise<ImageEntryWithAnalysis[]> => {
   try {
-    // Initialize from GitHub if the local database is empty
-    const count = await db.entries.count();
-    if (count === 0) {
-      await initializeFromGitHub();
-    }
+    // Always sync with GitHub first
+    await initializeFromGitHub();
     
     const entries = await db.getAllEntries();
     return entries.map(entry => convertToApiEntry(entry as ImageEntry & { id: number }));
