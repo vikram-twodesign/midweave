@@ -4,13 +4,13 @@
   "description": "",
   "images": [
     {
-      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732604118672__0000194_photo_2024_09_25_22_40_52.jpg",
-      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732604118672__0000194_photo_2024_09_25_22_40_52.jpg",
-      "size": 276929
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732604434043_00000170_photo_2024_09_29_18_36_13.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732604434043_00000170_photo_2024_09_29_18_36_13.jpg",
+      "size": 223368
     }
   ],
   "parameters": {
-    "sref": "--sref 8375359893512324",
+    "sref": "--sref 4050681544112",
     "prompt": "",
     "style": "",
     "ar": "",
@@ -20,54 +20,54 @@
     "stylize": null
   },
   "aiAnalysis": {
-    "description": "The image is a vibrant collage of various whimsical illustrations, showcasing a mix of characters and scenes that evoke a playful yet eerie atmosphere. The use of bold hues and smooth lines creates a cohesive, dreamlike quality throughout the composition.",
-    "imageType": "Digital Art",
+    "description": "The image features a collage of four distinct illustrations, each showcasing unique characters and landscapes with bold lines and bright colors. The top left depicts a quirky character, while the top right shows a cheerful girl, and the bottom left presents a vibrant landscape with a sun and clouds. The bottom right features a mysterious figure in a wide-brimmed hat against a striking red background.",
+    "imageType": "Illustration",
     "style": {
-      "primary": "Contemporary Fantasy",
+      "primary": "Cartoonish and playful",
       "secondary": [
-        "Pop Art",
-        "Surrealism"
+        "Minimalist",
+        "Colorful"
       ],
       "influences": [
-        "Cartoon aesthetics",
-        "Retro illustration"
+        "Pop Art",
+        "Street Art"
       ]
     },
     "technical": {
-      "quality": "High-quality digital render with sharp details",
-      "renderStyle": "Flat colors with gradient shading",
-      "detailLevel": "Medium to high, with clear character features and backgrounds",
-      "lighting": "Soft, ambient lighting with a focus on color contrasts"
+      "quality": "High quality with clear lines and vibrant colors",
+      "renderStyle": "Flat digital illustration",
+      "detailLevel": "Moderate detail with emphasis on bold shapes",
+      "lighting": "Flat lighting with no strong shadows"
     },
     "colors": {
       "palette": [
-        "#1D1D2C",
-        "#00BFFF",
-        "#FF6F61"
+        "#FF5733",
+        "#4CAF50",
+        "#FFC300"
       ],
-      "mood": "Playful and slightly spooky",
-      "contrast": "High contrast between dark backgrounds and bright colors"
+      "mood": "Bright and cheerful",
+      "contrast": "High contrast with distinct color separation"
     },
     "tags": {
       "style": [
-        "whimsical",
-        "collage",
-        "illustration"
+        "cartoon",
+        "colorful",
+        "playful"
       ],
       "technical": [
         "digital",
-        "high quality",
-        "colorful"
+        "flat",
+        "illustration"
       ],
       "mood": [
-        "playful",
-        "eerie",
-        "dreamlike"
+        "cheerful",
+        "vibrant",
+        "dynamic"
       ]
     }
   },
-  "createdAt": "2024-11-26T06:55:20.214Z",
-  "lastModified": "2024-11-26T06:55:20.214Z",
+  "createdAt": "2024-11-26T07:00:35.809Z",
+  "lastModified": "2024-11-26T07:00:35.809Z",
   "featured": false,
   "curatorNotes": ""
 }
