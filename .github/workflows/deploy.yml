@@ -36,6 +36,7 @@ jobs:
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_GITHUB_TOKEN: ${{ secrets.NEXT_PUBLIC_GITHUB_TOKEN }}
+          NEXT_PUBLIC_OPENAI_API_KEY: ${{ secrets.NEXT_PUBLIC_OPENAI_API_KEY }}
           NEXT_PUBLIC_REPOSITORY: vikram-twodesign/midweave
           NEXT_PUBLIC_BRANCH: main
         run: npm run build
