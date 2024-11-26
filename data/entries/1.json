@@ -4,13 +4,13 @@
   "description": "",
   "images": [
     {
-      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732554009833_00000321_photo_2024_11_16_17_30_29.jpg",
-      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732554009833_00000321_photo_2024_11_16_17_30_29.jpg",
-      "size": 291025
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732561034129_9bc36311_e453_4bc1_a00e_a794a948b7cc.png",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732561034129_9bc36311_e453_4bc1_a00e_a794a948b7cc.png",
+      "size": 4206196
     }
   ],
   "parameters": {
-    "sref": "--sref 40506815990",
+    "sref": "—sref 674664696",
     "prompt": "",
     "style": "",
     "ar": "",
@@ -20,54 +20,54 @@
     "stylize": null
   },
   "aiAnalysis": {
-    "description": "The image features a vibrant, multi-panel composition blending surrealism and abstract elements, showcasing figures and organic shapes in a dreamlike setting. The use of bold colors and intricate designs creates a captivating visual narrative.",
-    "imageType": "Digital Art",
+    "description": "The image depicts a serene outdoor workspace, where a man and a woman are engaged in creative activities amidst lush greenery. The composition features a rustic table with art supplies, a bicycle, and a dog, creating a warm, inviting atmosphere that blends nature with creativity.",
+    "imageType": "Photograph",
     "style": {
-      "primary": "Surrealism",
+      "primary": "Realism",
       "secondary": [
-        "Abstract",
-        "Pop Art"
+        "Naturalism",
+        "Documentary"
       ],
       "influences": [
-        "Psychedelic Art",
-        "Contemporary Illustration"
+        "Contemporary Photography",
+        "Lifestyle Photography"
       ]
     },
     "technical": {
-      "quality": "High-resolution with sharp details",
-      "renderStyle": "Vector-based rendering",
-      "detailLevel": "Highly detailed with intricate patterns",
-      "lighting": "Soft, diffused lighting with glowing elements"
+      "quality": "High quality with sharp details and rich textures",
+      "renderStyle": "Natural lighting with a soft focus",
+      "detailLevel": "High detail, capturing intricate elements like foliage and textures",
+      "lighting": "Warm, diffused natural light enhancing the tranquil mood"
     },
     "colors": {
       "palette": [
-        "#FF5D8A",
-        "#A52B9A",
-        "#4B0082"
+        "#A8B5A2",
+        "#E8D3B4",
+        "#6A7B6D"
       ],
-      "mood": "Vibrant and whimsical",
-      "contrast": "High contrast between bright colors and dark backgrounds"
+      "mood": "Calm and inviting, fostering a sense of creativity and relaxation",
+      "contrast": "Moderate contrast, emphasizing the softness of the scene"
     },
     "tags": {
       "style": [
-        "surreal",
-        "abstract",
-        "illustration"
+        "serene",
+        "creative",
+        "outdoor"
       ],
       "technical": [
-        "high-resolution",
-        "vector art",
-        "detailed"
+        "high quality",
+        "natural lighting",
+        "realism"
       ],
       "mood": [
-        "whimsical",
-        "vibrant",
-        "dreamlike"
+        "calm",
+        "inviting",
+        "creative"
       ]
     }
   },
-  "createdAt": "2024-11-25T17:00:14.671Z",
-  "lastModified": "2024-11-25T17:00:14.671Z",
+  "createdAt": "2024-11-25T18:57:22.611Z",
+  "lastModified": "2024-11-25T18:57:22.611Z",
   "featured": false,
   "curatorNotes": ""
 }
