@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { env } from '@/lib/config/env';
+import { env, validateEnv } from '@/lib/config/env';
 import { Buffer } from 'buffer';
 
 export class GitHubService {
@@ -10,71 +10,36 @@ export class GitHubService {
   private isConfigured: boolean;
 
   constructor() {
-    this.isConfigured = Boolean(env.GITHUB_TOKEN);
+    this.isConfigured = validateEnv();
 
     if (!this.isConfigured) {
-      console.error('GitHub token is not configured. Some features may not work.');
+      console.error('GitHub is not properly configured. Please check your environment variables.');
+      return;
     }
 
     this.octokit = new Octokit({
-      auth: env.GITHUB_TOKEN || undefined,
+      auth: env.GITHUB_TOKEN,
     });
 
-    // Get repository details
-    const [owner, repo] = (env.REPOSITORY || '').split('/');
-    if (!owner || !repo) {
-      throw new Error('Invalid repository configuration');
-    }
-
-    this.owner = owner;
-    this.repo = repo;
+    [this.owner, this.repo] = env.REPOSITORY.split('/');
     this.branch = env.BRANCH;
 
-    // Log initialization (but not the token)
-    console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
+    // Log initialization
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
+    }
   }
 
-  private checkConfiguration() {
+  private ensureConfigured() {
     if (!this.isConfigured) {
       throw new Error('GitHub is not properly configured. Please check your environment variables.');
     }
   }
 
-  // Helper method to get file content
-  private async getFileContent(path: string): Promise<{ content: string; sha: string }> {
-    this.checkConfiguration();
-    try {
-      const response = await this.octokit.repos.getContent({
-        owner: this.owner,
-        repo: this.repo,
-        path,
-        ref: this.branch,
-      });
-
-      if (Array.isArray(response.data)) {
-        throw new Error('Path points to a directory, not a file');
-      }
-
-      if (response.data.type !== 'file') {
-        throw new Error('Path does not point to a file');
-      }
-
-      return {
-        content: Buffer.from(response.data.content, 'base64').toString('utf8'),
-        sha: response.data.sha,
-      };
-    } catch (error: any) {
-      if (error.status === 404) {
-        return { content: '', sha: '' };
-      }
-      throw error;
-    }
-  }
-
-  // List all entries from the data/entries directory
   async listEntries() {
-    this.checkConfiguration();
     try {
+      this.ensureConfigured();
+
       const response = await this.octokit.repos.getContent({
         owner: this.owner,
         repo: this.repo,
@@ -83,7 +48,7 @@ export class GitHubService {
       });
 
       if (!Array.isArray(response.data)) {
-        throw new Error('Expected directory listing');
+        return [];
       }
 
       const entries = await Promise.all(
@@ -100,11 +65,37 @@ export class GitHubService {
           })
       );
 
-      const validEntries = entries.filter(entry => entry !== null);
-      return validEntries;
+      return entries.filter(entry => entry !== null);
     } catch (error) {
       console.error('Error listing entries:', error);
       return [];
+    }
+  }
+
+  private async getFileContent(path: string): Promise<{ content: string; sha: string }> {
+    this.ensureConfigured();
+    
+    try {
+      const response = await this.octokit.repos.getContent({
+        owner: this.owner,
+        repo: this.repo,
+        path,
+        ref: this.branch,
+      });
+
+      if (Array.isArray(response.data) || response.data.type !== 'file') {
+        throw new Error('Invalid file response');
+      }
+
+      return {
+        content: Buffer.from(response.data.content, 'base64').toString('utf8'),
+        sha: response.data.sha,
+      };
+    } catch (error: any) {
+      if (error.status === 404) {
+        return { content: '', sha: '' };
+      }
+      throw error;
     }
   }
 
