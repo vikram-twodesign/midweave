@@ -1,0 +1,83 @@
+{
+  "id": 15,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732605728867_00000311-PHOTO-2024-11-12-20-22-25.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732605728867_00000311-PHOTO-2024-11-12-20-22-25.jpg",
+      "size": 70794
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732605728868_00000312-PHOTO-2024-11-12-20-23-01.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732605728868_00000312-PHOTO-2024-11-12-20-23-01.jpg",
+      "size": 170507
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732605728868_00000313-PHOTO-2024-11-12-20-23-16.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732605728868_00000313-PHOTO-2024-11-12-20-23-16.jpg",
+      "size": 270829
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 40506815472324",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image captures a young woman peering from behind a textured stone wall, creating a sense of intrigue and mystery. The soft focus and muted colors evoke a dreamlike quality, emphasizing her delicate features and the ethereal ambiance of the surrounding nature.",
+    "imageType": "Photograph",
+    "style": {
+      "primary": "Portrait",
+      "secondary": [
+        "Romanticism",
+        "Naturalism"
+      ],
+      "influences": [
+        "19th-century portraiture",
+        "Impressionism"
+      ]
+    },
+    "technical": {
+      "quality": "High resolution with fine detail",
+      "renderStyle": "Candid photography",
+      "detailLevel": "Moderate to high detail in the subject",
+      "lighting": "Soft, diffused natural light"
+    },
+    "colors": {
+      "palette": [
+        "#EDEAE3",
+        "#6B4C4C",
+        "#3A3A3A"
+      ],
+      "mood": "Melancholic yet serene",
+      "contrast": "Low to moderate contrast"
+    },
+    "tags": {
+      "style": [
+        "portrait",
+        "mystery",
+        "nature"
+      ],
+      "technical": [
+        "high resolution",
+        "natural light",
+        "soft focus"
+      ],
+      "mood": [
+        "melancholic",
+        "intriguing",
+        "ethereal"
+      ]
+    }
+  },
+  "createdAt": "2024-11-26T07:22:11.886Z",
+  "lastModified": "2024-11-26T07:22:11.886Z",
+  "featured": false,
+  "curatorNotes": ""
+}

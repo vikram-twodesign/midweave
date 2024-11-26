@@ -1,0 +1,73 @@
+{
+  "id": 12,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732603799514_00000196_photo_2024_10_03_08_00_31.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732603799514_00000196_photo_2024_10_03_08_00_31.jpg",
+      "size": 335888
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 405068158966",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image features a collage of stylish, rugged items primarily focused on motorcycles and leather accessories. The composition is arranged with a dark background that enhances the earthy tones of the products, creating a cohesive, masculine aesthetic.",
+    "imageType": "Photograph",
+    "style": {
+      "primary": "Minimalistic and industrial",
+      "secondary": [
+        "Vintage",
+        "Rugged"
+      ],
+      "influences": [
+        "Modern lifestyle photography",
+        "Motorcycle culture"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality image with sharp details",
+      "renderStyle": "Natural lighting",
+      "detailLevel": "High detail with emphasis on textures",
+      "lighting": "Soft, diffused lighting highlighting the products"
+    },
+    "colors": {
+      "palette": [
+        "#3B2A19",
+        "#5B3A29",
+        "#1F1F1F"
+      ],
+      "mood": "Warm and inviting with a touch of edginess",
+      "contrast": "Moderate contrast emphasizing the depth of colors"
+    },
+    "tags": {
+      "style": [
+        "Minimalist",
+        "Industrial",
+        "Motorcycle"
+      ],
+      "technical": [
+        "High resolution",
+        "Textured",
+        "Natural light"
+      ],
+      "mood": [
+        "Warm",
+        "Edgy",
+        "Stylish"
+      ]
+    }
+  },
+  "createdAt": "2024-11-26T06:50:01.029Z",
+  "lastModified": "2024-11-26T06:50:01.029Z",
+  "featured": false,
+  "curatorNotes": ""
+}

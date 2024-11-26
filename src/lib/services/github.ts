@@ -7,27 +7,39 @@ export class GitHubService {
   private owner: string;
   private repo: string;
   private branch: string;
-  private isConfigured: boolean;
+  private isConfigured: boolean = false;
 
   constructor() {
-    this.isConfigured = validateGitHubConfig();
+    const token = typeof window !== 'undefined' 
+      ? window.__ENV__?.NEXT_PUBLIC_GITHUB_TOKEN 
+      : process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
-    this.octokit = new Octokit({
-      auth: config.github.token,
-    });
+    this.owner = 'vikram-twodesign';
+    this.repo = 'midweave';
+    this.branch = 'main';
 
-    this.owner = config.github.owner;
-    this.repo = config.github.repo;
-    this.branch = config.github.branch;
+    if (token) {
+      this.octokit = new Octokit({ auth: token });
+      this.isConfigured = true;
+    }
   }
 
-  private ensureConfigured() {
+  private ensureConfigured(): void {
     if (!this.isConfigured) {
+      // Instead of throwing, return empty results for public routes
+      if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
+        return;
+      }
       throw new Error('GitHub service is not properly configured. Check your environment variables.');
     }
   }
 
   async listEntries(): Promise<any[]> {
+    // For public routes, return empty array if not configured
+    if (!this.isConfigured && typeof window !== 'undefined' && window.location.pathname === '/midweave') {
+      return [];
+    }
+
     this.ensureConfigured();
 
     try {
@@ -78,6 +90,10 @@ export class GitHubService {
   }
 
   async getFileContent(path: string): Promise<{ sha: string; content: string }> {
+    if (!this.isConfigured && typeof window !== 'undefined' && window.location.pathname === '/midweave') {
+      return { sha: '', content: '' };
+    }
+
     this.ensureConfigured();
 
     try {
