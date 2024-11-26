@@ -1,40 +1,63 @@
 import { Octokit } from '@octokit/rest';
-import { config, validateGitHubConfig } from '@/lib/config';
-import { Buffer } from 'buffer';
+import { Base64 } from 'js-base64';
 
 export class GitHubService {
-  private octokit: Octokit | null = null;
-  private owner: string = 'vikram-twodesign';
-  private repo: string = 'midweave';
-  private branch: string = 'main';
-  private isConfigured: boolean = false;
+  private octokit: Octokit;
+  private owner: string;
+  private repo: string;
 
   constructor() {
-    const token = typeof window !== 'undefined' 
-      ? window.__ENV__?.NEXT_PUBLIC_GITHUB_TOKEN 
-      : process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+    this.octokit = new Octokit({
+      auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
+    });
+    this.owner = process.env.NEXT_PUBLIC_GITHUB_OWNER || '';
+    this.repo = process.env.NEXT_PUBLIC_GITHUB_REPO || '';
+  }
 
-    if (token) {
-      this.octokit = new Octokit({ auth: token });
-      this.isConfigured = true;
+  private async getFileContent(path: string) {
+    try {
+      const response = await this.octokit.rest.repos.getContent({
+        owner: this.owner,
+        repo: this.repo,
+        path,
+      });
+
+      if (!Array.isArray(response.data) && response.data.type === 'file') {
+        return {
+          content: response.data.content,
+          sha: response.data.sha,
+        };
+      }
+      throw new Error('Not a file');
+    } catch (error: any) {
+      if (error.status === 404) {
+        return { content: '', sha: '' };
+      }
+      throw error;
     }
   }
 
-  private ensureConfigured(): asserts this is { octokit: Octokit } {
-    if (!this.isConfigured || !this.octokit) {
-      // Instead of throwing, return empty results for public routes
-      if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
-        return;
-      }
-      throw new Error('GitHub service is not properly configured. Check your environment variables.');
+  async saveMetadata(path: string, data: any) {
+    try {
+      const fileContent = await this.getFileContent(path);
+      const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+
+      await this.octokit.rest.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path,
+        message: `Update ${path}`,
+        content,
+        sha: fileContent.sha || undefined,
+      });
+    } catch (error) {
+      console.error('Error saving metadata:', error);
+      throw error;
     }
   }
 
   async listEntries(): Promise<any[]> {
-    if (!this.isConfigured || !this.octokit) {
-      if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
-        return [];
-      }
+    if (!this.octokit) {
       throw new Error('GitHub service is not properly configured.');
     }
 
@@ -43,7 +66,6 @@ export class GitHubService {
         owner: this.owner,
         repo: this.repo,
         path: 'data/entries',
-        ref: this.branch,
       });
 
       if (!Array.isArray(files)) {
@@ -60,7 +82,6 @@ export class GitHubService {
               owner: this.owner,
               repo: this.repo,
               path: `data/entries/${file.name}`,
-              ref: this.branch,
             });
 
             if (Array.isArray(data) || !('content' in data)) {
@@ -85,42 +106,8 @@ export class GitHubService {
     }
   }
 
-  async getFileContent(path: string): Promise<{ sha: string; content: string }> {
-    if (!this.isConfigured || !this.octokit) {
-      if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
-        return { sha: '', content: '' };
-      }
-      throw new Error('GitHub service is not properly configured.');
-    }
-
-    try {
-      const { data } = await this.octokit.rest.repos.getContent({
-        owner: this.owner,
-        repo: this.repo,
-        path,
-        ref: this.branch,
-      });
-
-      if (!Array.isArray(data) && 'sha' in data && 'content' in data) {
-        // Decode base64 content
-        const content = Buffer.from(data.content, 'base64').toString('utf-8');
-        return {
-          sha: data.sha,
-          content,
-        };
-      }
-      throw new Error('Invalid response format');
-    } catch (error: any) {
-      if (error.status === 404) {
-        // Silently return empty values for non-existent files
-        return { sha: '', content: '' };
-      }
-      throw error;
-    }
-  }
-
   async uploadImage(file: File, path: string): Promise<string> {
-    if (!this.isConfigured || !this.octokit) {
+    if (!this.octokit) {
       throw new Error('GitHub service is not properly configured.');
     }
 
@@ -139,11 +126,10 @@ export class GitHubService {
         message: sha ? `Update ${path}` : `Create ${path}`,
         content,
         sha: sha || undefined,
-        branch: this.branch
       });
 
       // Return the raw URL for the uploaded file
-      return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${this.branch}/${path}`;
+      return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${path}`;
     } catch (error: any) {
       if (error.status === 409) {
         // On conflict, retry once with fresh SHA
@@ -155,10 +141,9 @@ export class GitHubService {
           message: `Update ${path} (retry)`,
           content: await this.fileToBase64(file),
           sha: sha || undefined,
-          branch: this.branch
         });
         
-        return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${this.branch}/${path}`;
+        return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${path}`;
       }
       
       // Only log non-404 errors
@@ -183,37 +168,10 @@ export class GitHubService {
     });
   }
 
-  async saveMetadata(data: any, path: string): Promise<void> {
-    this.ensureConfigured();
-
-    try {
-      // Get existing file's SHA (will be empty for new files)
-      const { sha } = await this.getFileContent(path);
-
-      // Prepare the content
-      const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
-
-      // Create or update the file
-      await this.octokit.rest.repos.createOrUpdateFileContents({
-        owner: this.owner,
-        repo: this.repo,
-        path,
-        message: sha ? `Update ${path}` : `Create ${path}`,
-        content,
-        sha: sha || undefined,
-        branch: this.branch
-      });
-    } catch (error: any) {
-      // Only log non-404 errors
-      if (error.status !== 404) {
-        console.error('Error saving metadata:', error);
-      }
-      throw error;
-    }
-  }
-
   async deleteFile(path: string): Promise<void> {
-    this.ensureConfigured();
+    if (!this.octokit) {
+      throw new Error('GitHub service is not properly configured.');
+    }
 
     try {
       // First get the file to get its SHA
@@ -221,7 +179,6 @@ export class GitHubService {
         owner: this.owner,
         repo: this.repo,
         path,
-        ref: this.branch
       });
 
       if (!Array.isArray(data) && 'sha' in data) {
@@ -232,7 +189,6 @@ export class GitHubService {
           path,
           message: `Delete ${path}`,
           sha: data.sha,
-          branch: this.branch
         });
       }
     } catch (error: any) {
@@ -244,4 +200,6 @@ export class GitHubService {
       throw error;
     }
   }
-} 
+}
+
+export default new GitHubService(); 

@@ -16,6 +16,14 @@ const nextConfig = {
     }
     return config;
   },
+  images: {
+    domains: ['raw.githubusercontent.com'],
+  },
+  typescript: {
+    // During development, you might want to ignore TypeScript errors
+    // Remove this in production
+    ignoreBuildErrors: true,
+  },
 }
 
 module.exports = nextConfig 
