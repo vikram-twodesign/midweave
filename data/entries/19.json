@@ -1,0 +1,73 @@
+{
+  "id": 19,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732633917710_00000073-PHOTO-2024-09-12-17-34-30.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732633917710_00000073-PHOTO-2024-09-12-17-34-30.JPG",
+      "size": 222351
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 4050681589234546",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image features a vibrant composition, showcasing a collection of stylized portraits and abstract forms, all interconnected through a bold color palette of blue, red, and white. The central sphere creates a focal point, while the surrounding images reflect an imaginative blend of human figures and surreal elements.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Contemporary Surrealism",
+      "secondary": [
+        "Pop Art",
+        "Abstract Art"
+      ],
+      "influences": [
+        "Modernism",
+        "Graphic Design"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality with sharp detail and clarity",
+      "renderStyle": "3D rendering with photorealistic textures",
+      "detailLevel": "Highly detailed with intricate designs",
+      "lighting": "Dramatic lighting with vibrant contrasts"
+    },
+    "colors": {
+      "palette": [
+        "#FF0000",
+        "#0000FF",
+        "#FFFFFF"
+      ],
+      "mood": "Dynamic and playful",
+      "contrast": "Strong contrast enhancing the visual impact"
+    },
+    "tags": {
+      "style": [
+        "Surrealism",
+        "Digital Art",
+        "Contemporary"
+      ],
+      "technical": [
+        "High Resolution",
+        "3D Render",
+        "Colorful"
+      ],
+      "mood": [
+        "Vibrant",
+        "Playful",
+        "Energetic"
+      ]
+    }
+  },
+  "createdAt": "2024-11-26T15:11:59.693Z",
+  "lastModified": "2024-11-26T15:11:59.693Z",
+  "featured": false,
+  "curatorNotes": ""
+}
