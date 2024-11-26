@@ -20,7 +20,7 @@ export class GitHubService {
     }
   }
 
-  private ensureConfigured(): void {
+  private ensureConfigured(): asserts this is { octokit: Octokit } {
     if (!this.isConfigured || !this.octokit) {
       // Instead of throwing, return empty results for public routes
       if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
@@ -31,7 +31,6 @@ export class GitHubService {
   }
 
   async listEntries(): Promise<any[]> {
-    // For public routes, return empty array if not configured
     if (!this.isConfigured || !this.octokit) {
       if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
         return [];
@@ -87,11 +86,12 @@ export class GitHubService {
   }
 
   async getFileContent(path: string): Promise<{ sha: string; content: string }> {
-    if (!this.isConfigured && typeof window !== 'undefined' && window.location.pathname === '/midweave') {
-      return { sha: '', content: '' };
+    if (!this.isConfigured || !this.octokit) {
+      if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
+        return { sha: '', content: '' };
+      }
+      throw new Error('GitHub service is not properly configured.');
     }
-
-    this.ensureConfigured();
 
     try {
       const { data } = await this.octokit.rest.repos.getContent({
@@ -120,13 +120,15 @@ export class GitHubService {
   }
 
   async uploadImage(file: File, path: string): Promise<string> {
-    this.ensureConfigured();
+    if (!this.isConfigured || !this.octokit) {
+      throw new Error('GitHub service is not properly configured.');
+    }
 
     try {
       // Convert file to base64
       const content = await this.fileToBase64(file);
       
-      // Try to get existing file's SHA (will be empty for new files)
+      // Try to get existing file's SHA
       const { sha } = await this.getFileContent(path);
 
       // Create or update file
