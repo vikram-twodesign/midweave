@@ -9,17 +9,28 @@ export class GitHubService {
   private branch: string;
 
   constructor() {
+    const token = typeof window !== 'undefined' ? window.__ENV__?.NEXT_PUBLIC_GITHUB_TOKEN : process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+    
+    if (!token) {
+      console.error('GitHub token is not configured');
+    }
+
     this.octokit = new Octokit({
-      auth: config.github.token
+      auth: token,
     });
+
     this.owner = config.github.owner;
     this.repo = config.github.repo;
     this.branch = config.github.branch || 'main';
+
+    // Log initialization (but not the token)
+    console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
   }
 
   // Helper method to get file content
   private async getFileContent(path: string): Promise<{ content: string; sha: string }> {
     try {
+      console.log(`Fetching content for: ${path}`);
       const response = await this.octokit.repos.getContent({
         owner: this.owner,
         repo: this.repo,
@@ -40,6 +51,7 @@ export class GitHubService {
         sha: response.data.sha,
       };
     } catch (error: any) {
+      console.error(`Error fetching file content for ${path}:`, error.message);
       if (error.status === 404) {
         return { content: '', sha: '' };
       }
@@ -50,6 +62,7 @@ export class GitHubService {
   // List all entries from the data/entries directory
   async listEntries() {
     try {
+      console.log('Listing entries from GitHub...');
       const response = await this.octokit.repos.getContent({
         owner: this.owner,
         repo: this.repo,
@@ -75,10 +88,12 @@ export class GitHubService {
           })
       );
 
-      return entries.filter(entry => entry !== null);
+      const validEntries = entries.filter(entry => entry !== null);
+      console.log(`Successfully fetched ${validEntries.length} entries`);
+      return validEntries;
     } catch (error) {
       console.error('Error listing entries:', error);
-      return [];
+      throw error;
     }
   }
 
