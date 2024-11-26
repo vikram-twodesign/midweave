@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { config } from '@/lib/config';
+import { env } from '@/lib/config/env';
 import { Buffer } from 'buffer';
 
 export class GitHubService {
@@ -9,22 +9,23 @@ export class GitHubService {
   private branch: string;
 
   constructor() {
-    // Get token from environment variables
-    const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-    
-    if (!token) {
+    if (!env.GITHUB_TOKEN) {
       console.error('GitHub token is not configured');
     }
 
     this.octokit = new Octokit({
-      auth: token,
+      auth: env.GITHUB_TOKEN,
     });
 
-    // Get repository details from environment variables
-    const [owner, repo] = (process.env.NEXT_PUBLIC_REPOSITORY || '').split('/');
-    this.owner = owner || config.github.owner;
-    this.repo = repo || config.github.repo;
-    this.branch = process.env.NEXT_PUBLIC_BRANCH || config.github.branch || 'main';
+    // Get repository details
+    const [owner, repo] = (env.REPOSITORY || '').split('/');
+    if (!owner || !repo) {
+      console.error('Repository configuration is invalid');
+    }
+
+    this.owner = owner;
+    this.repo = repo;
+    this.branch = env.BRANCH;
 
     // Log initialization (but not the token)
     console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
