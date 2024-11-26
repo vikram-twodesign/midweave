@@ -3,20 +3,16 @@ import { config, validateGitHubConfig } from '@/lib/config';
 import { Buffer } from 'buffer';
 
 export class GitHubService {
-  private octokit: Octokit;
-  private owner: string;
-  private repo: string;
-  private branch: string;
+  private octokit: Octokit | null = null;
+  private owner: string = 'vikram-twodesign';
+  private repo: string = 'midweave';
+  private branch: string = 'main';
   private isConfigured: boolean = false;
 
   constructor() {
     const token = typeof window !== 'undefined' 
       ? window.__ENV__?.NEXT_PUBLIC_GITHUB_TOKEN 
       : process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-
-    this.owner = 'vikram-twodesign';
-    this.repo = 'midweave';
-    this.branch = 'main';
 
     if (token) {
       this.octokit = new Octokit({ auth: token });
@@ -25,7 +21,7 @@ export class GitHubService {
   }
 
   private ensureConfigured(): void {
-    if (!this.isConfigured) {
+    if (!this.isConfigured || !this.octokit) {
       // Instead of throwing, return empty results for public routes
       if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
         return;
@@ -36,11 +32,12 @@ export class GitHubService {
 
   async listEntries(): Promise<any[]> {
     // For public routes, return empty array if not configured
-    if (!this.isConfigured && typeof window !== 'undefined' && window.location.pathname === '/midweave') {
-      return [];
+    if (!this.isConfigured || !this.octokit) {
+      if (typeof window !== 'undefined' && window.location.pathname === '/midweave') {
+        return [];
+      }
+      throw new Error('GitHub service is not properly configured.');
     }
-
-    this.ensureConfigured();
 
     try {
       const { data: files } = await this.octokit.rest.repos.getContent({
@@ -60,7 +57,7 @@ export class GitHubService {
       const entries = await Promise.all(
         jsonFiles.map(async (file: any) => {
           try {
-            const { data } = await this.octokit.rest.repos.getContent({
+            const { data } = await this.octokit!.rest.repos.getContent({
               owner: this.owner,
               repo: this.repo,
               path: `data/entries/${file.name}`,
