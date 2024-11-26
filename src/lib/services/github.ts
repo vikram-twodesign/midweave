@@ -9,7 +9,8 @@ export class GitHubService {
   private branch: string;
 
   constructor() {
-    const token = typeof window !== 'undefined' ? window.__ENV__?.NEXT_PUBLIC_GITHUB_TOKEN : process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+    // Get token from environment variables
+    const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
     
     if (!token) {
       console.error('GitHub token is not configured');
@@ -19,9 +20,11 @@ export class GitHubService {
       auth: token,
     });
 
-    this.owner = config.github.owner;
-    this.repo = config.github.repo;
-    this.branch = config.github.branch || 'main';
+    // Get repository details from environment variables
+    const [owner, repo] = (process.env.NEXT_PUBLIC_REPOSITORY || '').split('/');
+    this.owner = owner || config.github.owner;
+    this.repo = repo || config.github.repo;
+    this.branch = process.env.NEXT_PUBLIC_BRANCH || config.github.branch || 'main';
 
     // Log initialization (but not the token)
     console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
