@@ -1,13 +1,20 @@
 // Initialize config object
+const getEnvVar = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.__ENV__) {
+    return window.__ENV__[key] || process.env[key] || defaultValue;
+  }
+  return process.env[key] || defaultValue;
+};
+
 export const config = {
   github: {
-    token: process.env.NEXT_PUBLIC_GITHUB_TOKEN || '',
+    token: getEnvVar('NEXT_PUBLIC_GITHUB_TOKEN'),
     owner: 'vikram-twodesign',
     repo: 'midweave',
     branch: 'main'
   },
   openai: {
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '',
+    apiKey: getEnvVar('NEXT_PUBLIC_OPENAI_API_KEY'),
   },
 } as const;
 

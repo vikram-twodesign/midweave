@@ -62,50 +62,51 @@ export function LibraryView() {
   }
 
   const handleBatchDelete = async () => {
-    if (selectedEntries.size === 0) return
-
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${selectedEntries.size} selected items?`
-    )
-
-    if (!confirmed) return
-
     try {
-      await deleteEntries(Array.from(selectedEntries).map(id => parseInt(id)))
+      const idsToDelete = Array.from(selectedEntries);
+      await deleteEntries(idsToDelete);
       toast({
         title: "Success",
-        description: `${selectedEntries.size} items deleted successfully`
-      })
-      setSelectedEntries(new Set())
-      loadEntries()
+        description: `${idsToDelete.length} entries deleted successfully`
+      });
+      // Refresh the entries list
+      loadEntries();
+      // Clear selection
+      setSelectedEntries(new Set());
     } catch (error) {
+      console.error('Batch delete error:', error);
       toast({
         title: "Error",
-        description: "Failed to delete selected items",
+        description: "Failed to delete selected entries",
         variant: "destructive"
-      })
+      });
     }
-  }
+  };
 
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm("Are you sure you want to delete this item?")
-    if (!confirmed) return
-
     try {
-      await deleteEntry(id)
+      await deleteEntry(id);
       toast({
         title: "Success",
-        description: "Item deleted successfully"
-      })
-      loadEntries()
+        description: "Entry deleted successfully"
+      });
+      // Refresh the entries list
+      loadEntries();
+      // Clear selection if the deleted entry was selected
+      if (selectedEntries.has(id)) {
+        const newSelection = new Set(selectedEntries);
+        newSelection.delete(id);
+        setSelectedEntries(newSelection);
+      }
     } catch (error) {
+      console.error('Delete error:', error);
       toast({
         title: "Error",
-        description: "Failed to delete item",
+        description: "Failed to delete entry",
         variant: "destructive"
-      })
+      });
     }
-  }
+  };
 
   const toggleEntrySelection = (id: string, event: React.MouseEvent) => {
     event.stopPropagation()

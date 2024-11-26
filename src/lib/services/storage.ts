@@ -110,18 +110,45 @@ export const forceSyncWithGitHub = async (): Promise<void> => {
 // Upload images function
 export const uploadImages = async (files: File[]): Promise<string[]> => {
   try {
-    const urls = await Promise.all(
-      files.map(async (file, index) => {
-        const timestamp = Date.now();
-        const safeName = file.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
-        const path = `images/originals/${timestamp}_${safeName}`;
-        
+    const uploadPromises = files.map(async (file) => {
+      const timestamp = Date.now();
+      const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toUpperCase();
+      const path = `images/originals/${timestamp}_${safeFileName}`;
+      
+      try {
         return await github.uploadImage(file, path);
-      })
+      } catch (error: any) {
+        // Only log non-404 errors
+        if (error.status !== 404) {
+          console.error(`Error uploading file ${safeFileName}:`, error);
+        }
+        throw error;
+      }
+    });
+
+    // Use allSettled to handle partial failures
+    const results = await Promise.allSettled(uploadPromises);
+    
+    // Check for any failures (excluding 404s)
+    const failures = results.filter(result => 
+      result.status === 'rejected' && 
+      (result.reason?.status !== 404)
     );
-    return urls;
-  } catch (error) {
-    console.error('Error uploading images:', error);
+    
+    if (failures.length > 0) {
+      console.error(`Failed to upload ${failures.length} out of ${files.length} files`);
+      throw new Error('Some files failed to upload');
+    }
+
+    // Extract successful uploads
+    return results
+      .filter((result): result is PromiseFulfilledResult<string> => result.status === 'fulfilled')
+      .map(result => result.value);
+  } catch (error: any) {
+    // Only log non-404 errors
+    if (error.status !== 404) {
+      console.error('Error uploading images:', error);
+    }
     throw new Error('Failed to upload images');
   }
 };
@@ -242,11 +269,20 @@ export const importData = async (jsonData: string): Promise<void> => {
   }
 };
 
-export const deleteEntries = async (ids: number[]): Promise<void> => {
+export const deleteEntries = async (ids: string[]): Promise<boolean> => {
   try {
-    await Promise.all(ids.map(id => db.deleteEntry(id)));
+    const results = await Promise.allSettled(ids.map(id => deleteEntry(id)));
+    
+    // Check if any deletions failed
+    const failures = results.filter(result => result.status === 'rejected');
+    if (failures.length > 0) {
+      console.error(`Failed to delete ${failures.length} entries`);
+      throw new Error('Some entries failed to delete');
+    }
+    
+    return true;
   } catch (error) {
-    console.error('Error deleting entries:', error);
+    console.error('Batch delete error:', error);
     throw new Error('Failed to delete entries');
   }
 };
@@ -287,23 +323,51 @@ export const updateEntry = async (
   }
 };
 
-export const deleteEntry = async (id: string): Promise<void> => {
+export const deleteEntry = async (id: string): Promise<boolean> => {
   try {
     const numericId = parseInt(id, 10);
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
 
-    // Delete from GitHub first
-    try {
-      await github.deleteFile(`data/entries/${id}.json`);
-    } catch (error) {
-      console.error('Error deleting file from GitHub:', error);
-      // Continue with local deletion even if GitHub deletion fails
+    // Get the entry first to know which files to delete
+    const entry = await db.entries.get(numericId);
+    if (!entry) {
+      throw new Error('Entry not found');
     }
 
-    // Then delete from local database
-    await db.deleteEntry(numericId);
+    // Delete all images from GitHub
+    const deletePromises = [];
+
+    // Add image deletion promises
+    for (const image of entry.images) {
+      const imagePath = image.url.split('/').pop();
+      if (imagePath) {
+        deletePromises.push(
+          github.deleteFile(`images/originals/${imagePath}`)
+            .catch(error => {
+              console.error(`Error deleting image ${imagePath}:`, error);
+              // Don't throw, just log the error
+            })
+        );
+      }
+    }
+
+    // Add metadata file deletion promise
+    deletePromises.push(
+      github.deleteFile(`data/entries/${id}.json`)
+        .catch(error => {
+          console.error('Error deleting metadata file:', error);
+          // Don't throw, just log the error
+        })
+    );
+
+    // Wait for all GitHub deletions to complete (or fail)
+    await Promise.allSettled(deletePromises);
+
+    // Delete from local database
+    await db.entries.delete(numericId);
+    return true;
   } catch (error) {
     console.error('Error deleting entry:', error);
     throw new Error('Failed to delete entry');
