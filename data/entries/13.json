@@ -1,0 +1,73 @@
+{
+  "id": 13,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732604118672__0000194_photo_2024_09_25_22_40_52.jpg",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732604118672__0000194_photo_2024_09_25_22_40_52.jpg",
+      "size": 276929
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 8375359893512324",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image is a vibrant collage of various whimsical illustrations, showcasing a mix of characters and scenes that evoke a playful yet eerie atmosphere. The use of bold hues and smooth lines creates a cohesive, dreamlike quality throughout the composition.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Contemporary Fantasy",
+      "secondary": [
+        "Pop Art",
+        "Surrealism"
+      ],
+      "influences": [
+        "Cartoon aesthetics",
+        "Retro illustration"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality digital render with sharp details",
+      "renderStyle": "Flat colors with gradient shading",
+      "detailLevel": "Medium to high, with clear character features and backgrounds",
+      "lighting": "Soft, ambient lighting with a focus on color contrasts"
+    },
+    "colors": {
+      "palette": [
+        "#1D1D2C",
+        "#00BFFF",
+        "#FF6F61"
+      ],
+      "mood": "Playful and slightly spooky",
+      "contrast": "High contrast between dark backgrounds and bright colors"
+    },
+    "tags": {
+      "style": [
+        "whimsical",
+        "collage",
+        "illustration"
+      ],
+      "technical": [
+        "digital",
+        "high quality",
+        "colorful"
+      ],
+      "mood": [
+        "playful",
+        "eerie",
+        "dreamlike"
+      ]
+    }
+  },
+  "createdAt": "2024-11-26T06:55:20.214Z",
+  "lastModified": "2024-11-26T06:55:20.214Z",
+  "featured": false,
+  "curatorNotes": ""
+}
