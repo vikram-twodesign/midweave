@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { env, validateEnv } from '@/lib/config/env';
+import { config, validateGitHubConfig } from '@/lib/config';
 import { Buffer } from 'buffer';
 
 export class GitHubService {
@@ -10,18 +10,15 @@ export class GitHubService {
   private isConfigured: boolean;
 
   constructor() {
-    this.isConfigured = validateEnv();
+    this.isConfigured = validateGitHubConfig();
 
     this.octokit = new Octokit({
-      auth: env.GITHUB_TOKEN,
+      auth: config.github.token,
     });
 
-    [this.owner, this.repo] = env.REPOSITORY.split('/');
-    this.branch = env.BRANCH;
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`GitHub Service initialized for ${this.owner}/${this.repo} on branch ${this.branch}`);
-    }
+    this.owner = config.github.owner;
+    this.repo = config.github.repo;
+    this.branch = config.github.branch;
   }
 
   private ensureConfigured() {
