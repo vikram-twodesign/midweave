@@ -1,0 +1,74 @@
+{
+  "id": 18,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/images/originals/1732633347831_00000317-PHOTO-2024-11-15-09-12-48.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/images/originals/1732633347831_00000317-PHOTO-2024-11-15-09-12-48.JPG",
+      "size": 116366
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 4050681589122",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "aiAnalysis": {
+    "description": "The image features a vibrant composition of four distinct quadrants, blending surrealism and dream-like elements. The upper left showcases a stylized profile of a face, while the upper right depicts birds on a wire against a sunset. The lower left captures a flying bird, and the lower right presents a cascading waterfall, all rendered in vivid gradients.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Surrealism",
+      "secondary": [
+        "Pop Art",
+        "Dreamlike",
+        "Fantasy"
+      ],
+      "influences": [
+        "Contemporary Digital Art",
+        "Vaporwave"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with smooth gradients and clean lines",
+      "renderStyle": "Vector-based rendering",
+      "detailLevel": "Moderately detailed, focusing on color and form rather than intricate textures",
+      "lighting": "Soft, ambient lighting enhancing the ethereal feel"
+    },
+    "colors": {
+      "palette": [
+        "#FF6F91",
+        "#FF9A8B",
+        "#FFC3A0"
+      ],
+      "mood": "Whimsical and uplifting",
+      "contrast": "High contrast between vibrant colors and soft backgrounds"
+    },
+    "tags": {
+      "style": [
+        "surrealism",
+        "digital art",
+        "vaporwave"
+      ],
+      "technical": [
+        "vector",
+        "high quality",
+        "smooth gradients"
+      ],
+      "mood": [
+        "whimsical",
+        "uplifting",
+        "dreamlike"
+      ]
+    }
+  },
+  "createdAt": "2024-11-26T15:02:29.889Z",
+  "lastModified": "2024-11-26T15:02:29.889Z",
+  "featured": false,
+  "curatorNotes": ""
+}
