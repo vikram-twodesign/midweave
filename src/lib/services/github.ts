@@ -7,20 +7,23 @@ export class GitHubService {
   private owner: string;
   private repo: string;
   private branch: string;
+  private isConfigured: boolean;
 
   constructor() {
-    if (!env.GITHUB_TOKEN) {
-      console.error('GitHub token is not configured');
+    this.isConfigured = Boolean(env.GITHUB_TOKEN);
+
+    if (!this.isConfigured) {
+      console.error('GitHub token is not configured. Some features may not work.');
     }
 
     this.octokit = new Octokit({
-      auth: env.GITHUB_TOKEN,
+      auth: env.GITHUB_TOKEN || undefined,
     });
 
     // Get repository details
     const [owner, repo] = (env.REPOSITORY || '').split('/');
     if (!owner || !repo) {
-      console.error('Repository configuration is invalid');
+      throw new Error('Invalid repository configuration');
     }
 
     this.owner = owner;
@@ -31,10 +34,16 @@ export class GitHubService {
     console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
   }
 
+  private checkConfiguration() {
+    if (!this.isConfigured) {
+      throw new Error('GitHub is not properly configured. Please check your environment variables.');
+    }
+  }
+
   // Helper method to get file content
   private async getFileContent(path: string): Promise<{ content: string; sha: string }> {
+    this.checkConfiguration();
     try {
-      console.log(`Fetching content for: ${path}`);
       const response = await this.octokit.repos.getContent({
         owner: this.owner,
         repo: this.repo,
@@ -55,7 +64,6 @@ export class GitHubService {
         sha: response.data.sha,
       };
     } catch (error: any) {
-      console.error(`Error fetching file content for ${path}:`, error.message);
       if (error.status === 404) {
         return { content: '', sha: '' };
       }
@@ -65,8 +73,8 @@ export class GitHubService {
 
   // List all entries from the data/entries directory
   async listEntries() {
+    this.checkConfiguration();
     try {
-      console.log('Listing entries from GitHub...');
       const response = await this.octokit.repos.getContent({
         owner: this.owner,
         repo: this.repo,
@@ -93,11 +101,10 @@ export class GitHubService {
       );
 
       const validEntries = entries.filter(entry => entry !== null);
-      console.log(`Successfully fetched ${validEntries.length} entries`);
       return validEntries;
     } catch (error) {
       console.error('Error listing entries:', error);
-      throw error;
+      return [];
     }
   }
 

@@ -10,11 +10,6 @@ const nextConfig = {
     NEXT_PUBLIC_BRANCH: process.env.NEXT_PUBLIC_BRANCH || 'main',
   },
   basePath: process.env.NODE_ENV === 'production' ? '/midweave' : '',
-  experimental: {
-    images: {
-      unoptimized: true,
-    },
-  },
 }
 
 module.exports = nextConfig 
