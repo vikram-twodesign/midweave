@@ -7,7 +7,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_GITHUB_TOKEN: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
   },
-  basePath: '/midweave',
+  basePath: process.env.NODE_ENV === 'production' ? '/midweave' : '',
 }
 
 module.exports = nextConfig 

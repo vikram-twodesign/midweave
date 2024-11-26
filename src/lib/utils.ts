@@ -6,5 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getRoute(path: string) {
-  return path
+  const basePath = process.env.NODE_ENV === 'production' ? '/midweave' : '';
+  return `${basePath}${path}`
 }
