@@ -12,11 +12,6 @@ export class GitHubService {
   constructor() {
     this.isConfigured = validateEnv();
 
-    if (!this.isConfigured) {
-      console.error('GitHub is not properly configured. Please check your environment variables.');
-      return;
-    }
-
     this.octokit = new Octokit({
       auth: env.GITHUB_TOKEN,
     });
@@ -24,15 +19,14 @@ export class GitHubService {
     [this.owner, this.repo] = env.REPOSITORY.split('/');
     this.branch = env.BRANCH;
 
-    // Log initialization
     if (process.env.NODE_ENV === 'development') {
-      console.log(`Initializing GitHub service for ${this.owner}/${this.repo} on branch ${this.branch}`);
+      console.log(`GitHub Service initialized for ${this.owner}/${this.repo} on branch ${this.branch}`);
     }
   }
 
   private ensureConfigured() {
     if (!this.isConfigured) {
-      throw new Error('GitHub is not properly configured. Please check your environment variables.');
+      throw new Error('GitHub service is not properly configured. Check your environment variables.');
     }
   }
 

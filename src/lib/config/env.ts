@@ -1,29 +1,21 @@
-// Helper to safely get environment variables
-const getEnvVar = (key: string): string => {
-  // For client-side
-  if (typeof window !== 'undefined') {
-    return process.env[key] || '';
-  }
-  // For server-side
-  return process.env[key] || '';
-};
-
 // Environment configuration
 export const env = {
-  GITHUB_TOKEN: getEnvVar('NEXT_PUBLIC_GITHUB_TOKEN'),
-  REPOSITORY: getEnvVar('NEXT_PUBLIC_REPOSITORY') || 'vikram-twodesign/midweave',
-  BRANCH: getEnvVar('NEXT_PUBLIC_BRANCH') || 'main',
+  GITHUB_TOKEN: process.env.NEXT_PUBLIC_GITHUB_TOKEN || '',
+  REPOSITORY: process.env.NEXT_PUBLIC_REPOSITORY || 'vikram-twodesign/midweave',
+  BRANCH: process.env.NEXT_PUBLIC_BRANCH || 'main',
 } as const;
 
-// Validate required environment variables
+// Validate environment configuration
 export const validateEnv = () => {
-  const required = ['NEXT_PUBLIC_GITHUB_TOKEN'];
-  const missing = required.filter(key => !process.env[key]);
-  
-  if (missing.length > 0) {
-    console.error(`Missing required environment variables: ${missing.join(', ')}`);
+  if (!env.GITHUB_TOKEN) {
+    console.error('GitHub token is not configured. Please set NEXT_PUBLIC_GITHUB_TOKEN.');
     return false;
   }
-  
+
+  if (!env.REPOSITORY) {
+    console.error('Repository is not configured. Please set NEXT_PUBLIC_REPOSITORY.');
+    return false;
+  }
+
   return true;
 }; 
