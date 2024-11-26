@@ -169,12 +169,11 @@ export default function Home() {
               <div className="aspect-square relative">
                 <img
                   src={entry.images[0].url}
-                  alt={entry.title || 'Gallery image'}
+                  alt={entry.aiAnalysis.description || 'Gallery image'}
                   className="object-cover w-full h-full"
                 />
               </div>
               <CardContent className="p-4">
-                <h3 className="font-semibold mb-2">{entry.title || 'Untitled'}</h3>
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {entry.aiAnalysis.description}
                 </p>

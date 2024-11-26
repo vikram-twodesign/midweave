@@ -1,7 +1,13 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import { Inter } from "next/font/google"
 import { RootLayoutClient } from "@/components/layout/root-layout"
 import Script from "next/script"
+
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: "Midweave",
@@ -32,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
         <EnvironmentScript />
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>
