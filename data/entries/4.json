@@ -1,16 +1,16 @@
 {
   "id": "4",
-  "title": "Untitled Style",
+  "title": "liuyfluyfjkhvcjk hfljglglugliug",
   "images": [
     {
-      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732778135545_00000256-PHOTO-2024-10-21-08-11-28.JPG",
-      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732778135545_00000256-PHOTO-2024-10-21-08-11-28.JPG",
-      "size": 47991
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732780124861_00000262-PHOTO-2024-10-23-19-14-21.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732780124861_00000262-PHOTO-2024-10-23-19-14-21.JPG",
+      "size": 96107
     }
   ],
   "parameters": {
-    "sref": "--sref 9735945089067754765",
-    "prompt": "",
+    "sref": "--sref 973594508767657",
+    "prompt": "liuyfluyfjkhvcjk hfljglglugliug",
     "style": "",
     "ar": "",
     "chaos": null,
@@ -19,57 +19,55 @@
     "stylize": null
   },
   "adminMetadata": {
-    "createdAt": "2024-11-28T07:15:37.136Z",
-    "lastModified": "2024-11-28T07:15:37.136Z",
+    "createdAt": "2024-11-28T07:48:46.689Z",
+    "lastModified": "2024-11-28T07:48:46.689Z",
     "featured": false,
     "curatorNotes": ""
   },
   "aiAnalysis": {
-    "description": "The image features a series of four atmospheric scenes that evoke a sense of mystery and introspection. Each panel captures figures silhouetted against vibrant, glowing backgrounds, set in foggy urban environments that blend modern architecture with a dreamlike quality.",
-    "imageType": "Photograph",
+    "description": "Four distinct artworks arranged in a grid format. Each piece features unique elements, including abstract bubbles, a stylized pipe against a sunset, a skeletal illustration with botanical motifs, and a lone sneaker showcasing modern design.",
+    "imageType": "Digital Art",
     "style": {
-      "primary": "Contemporary Urban Photography",
+      "primary": "Contemporary minimalist",
       "secondary": [
-        "Cinematic",
-        "Moody",
-        "Surreal"
+        "Surrealism",
+        "Graphic Design"
       ],
       "influences": [
-        "Film Noir",
-        "Street Photography",
-        "Contemporary Art"
+        "Modern art",
+        "Pop culture"
       ]
     },
     "technical": {
-      "quality": "High quality with a polished finish",
-      "renderStyle": "Soft focus with a cinematic depth of field",
-      "detailLevel": "Moderate detail, emphasizing mood over sharpness",
-      "lighting": "Low light with dramatic contrasts and warm glows"
+      "quality": "High quality with smooth rendering",
+      "renderStyle": "3D rendering and vector graphics",
+      "detailLevel": "Moderate to high detail",
+      "lighting": "Soft, ambient lighting with strategic highlights"
     },
     "colors": {
       "palette": [
-        "#1C1C1E",
-        "#FF6F20",
-        "#FF9A00"
+        "#E2D9C5",
+        "#A96A4D",
+        "#6B3F2B"
       ],
-      "mood": "Melancholic yet warm, evoking nostalgia",
-      "contrast": "High contrast between dark silhouettes and bright backgrounds"
+      "mood": "Warm and inviting with a hint of nostalgia",
+      "contrast": "Moderate contrast enhancing visual interest"
     },
     "tags": {
       "style": [
-        "urban",
-        "atmospheric",
-        "moody"
+        "minimalist",
+        "surreal",
+        "graphic"
       ],
       "technical": [
-        "high quality",
-        "cinematic",
-        "soft focus"
+        "3D",
+        "vector",
+        "high quality"
       ],
       "mood": [
-        "mysterious",
-        "introspective",
-        "dreamlike"
+        "warm",
+        "inviting",
+        "contemporary"
       ]
     }
   }
