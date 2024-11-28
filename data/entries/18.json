@@ -1,0 +1,13 @@
+{
+  "id": 18,
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732633347831_00000317-PHOTO-2024-11-15-09-12-48.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732633347831_00000317-PHOTO-2024-11-15-09-12-48.JPG",
+      "size": 116366
+    }
+  ],
+  // ... rest of the file remains the same ...
+} 
