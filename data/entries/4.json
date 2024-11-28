@@ -1,0 +1,75 @@
+{
+  "id": "4",
+  "title": "Anime style illustrations with pop colour",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/data/images/originals/1732773699163_00000322-PHOTO-2024-11-16-18-08-53.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/data/images/originals/1732773699163_00000322-PHOTO-2024-11-16-18-08-53.JPG",
+      "size": 215527
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 973594508886573",
+    "prompt": "Anime style illustrations with pop colour",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-28T06:01:41.510Z",
+    "lastModified": "2024-11-28T06:01:41.510Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "The image is a vibrant, multi-panel illustration featuring a mix of anthropomorphic creatures, futuristic elements, and lush foliage. It combines playful character designs and dynamic poses with bold colors and sharp lines, creating a lively and energetic composition.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Modern Cartoon",
+      "secondary": [
+        "Pop Art",
+        "Futuristic",
+        "Anime"
+      ],
+      "influences": [
+        "Comic Art",
+        "Street Art"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with clean lines and vibrant colors",
+      "renderStyle": "Vector Art",
+      "detailLevel": "High detail in characters and backgrounds",
+      "lighting": "Flat lighting with no dramatic shadows, emphasizing colors"
+    },
+    "colors": {
+      "palette": [
+        "#00FF7F",
+        "#FF6F61",
+        "#FFCC00"
+      ],
+      "mood": "Playful and energetic",
+      "contrast": "High contrast between bright colors and background"
+    },
+    "tags": {
+      "style": [
+        "cartoon",
+        "colorful",
+        "whimsical"
+      ],
+      "technical": [
+        "high quality",
+        "vector",
+        "digital art"
+      ],
+      "mood": [
+        "fun",
+        "vibrant",
+        "dynamic"
+      ]
+    }
+  }
+}
