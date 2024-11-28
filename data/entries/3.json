@@ -1,0 +1,74 @@
+{
+  "id": "3",
+  "title": "textured surreal illustration style",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732777594915_00000327-PHOTO-2024-11-17-09-47-04.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732777594915_00000327-PHOTO-2024-11-17-09-47-04.JPG",
+      "size": 241604
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 9735945088875754",
+    "prompt": "textured surreal illustration style",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-28T07:06:36.641Z",
+    "lastModified": "2024-11-28T07:06:36.641Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "The image presents a collage of surreal, colorful illustrations featuring a character amidst vibrant, otherworldly landscapes and creatures. The composition blends human figures with fantastical elements such as oversized mushrooms and abstract forms, creating a striking contrast between reality and imagination.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Surrealism",
+      "secondary": [
+        "Fantasy",
+        "Illustration"
+      ],
+      "influences": [
+        "Contemporary art",
+        "Anime"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality digital rendering with intricate details",
+      "renderStyle": "Vector-based illustration",
+      "detailLevel": "Highly detailed with a focus on textures and patterns",
+      "lighting": "Dramatic lighting that enhances the fantastical elements"
+    },
+    "colors": {
+      "palette": [
+        "#1E1E1E",
+        "#A00D0D",
+        "#2A2D34"
+      ],
+      "mood": "Mysterious and vibrant with a sense of adventure",
+      "contrast": "High contrast between dark backgrounds and bright foreground elements"
+    },
+    "tags": {
+      "style": [
+        "surreal",
+        "fantasy",
+        "illustration"
+      ],
+      "technical": [
+        "digital",
+        "high quality",
+        "vector art"
+      ],
+      "mood": [
+        "mysterious",
+        "vibrant",
+        "adventurous"
+      ]
+    }
+  }
+}
