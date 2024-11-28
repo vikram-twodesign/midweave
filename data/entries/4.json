@@ -1,0 +1,76 @@
+{
+  "id": "4",
+  "title": "Untitled Style",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732778135545_00000256-PHOTO-2024-10-21-08-11-28.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732778135545_00000256-PHOTO-2024-10-21-08-11-28.JPG",
+      "size": 47991
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 9735945089067754765",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-28T07:15:37.136Z",
+    "lastModified": "2024-11-28T07:15:37.136Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "The image features a series of four atmospheric scenes that evoke a sense of mystery and introspection. Each panel captures figures silhouetted against vibrant, glowing backgrounds, set in foggy urban environments that blend modern architecture with a dreamlike quality.",
+    "imageType": "Photograph",
+    "style": {
+      "primary": "Contemporary Urban Photography",
+      "secondary": [
+        "Cinematic",
+        "Moody",
+        "Surreal"
+      ],
+      "influences": [
+        "Film Noir",
+        "Street Photography",
+        "Contemporary Art"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with a polished finish",
+      "renderStyle": "Soft focus with a cinematic depth of field",
+      "detailLevel": "Moderate detail, emphasizing mood over sharpness",
+      "lighting": "Low light with dramatic contrasts and warm glows"
+    },
+    "colors": {
+      "palette": [
+        "#1C1C1E",
+        "#FF6F20",
+        "#FF9A00"
+      ],
+      "mood": "Melancholic yet warm, evoking nostalgia",
+      "contrast": "High contrast between dark silhouettes and bright backgrounds"
+    },
+    "tags": {
+      "style": [
+        "urban",
+        "atmospheric",
+        "moody"
+      ],
+      "technical": [
+        "high quality",
+        "cinematic",
+        "soft focus"
+      ],
+      "mood": [
+        "mysterious",
+        "introspective",
+        "dreamlike"
+      ]
+    }
+  }
+}
