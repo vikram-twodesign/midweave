@@ -1,6 +1,7 @@
 {
   "id": "22",
   "title": "Untitled Style",
+  "description": "",
   "images": [
     {
       "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732696921678_00000094-PHOTO-2024-09-19-15-06-02.JPG",
@@ -8,5 +9,45 @@
       "size": 211062
     }
   ],
-  // ... rest of the file remains the same ...
+  "parameters": {
+    "sref": "",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": 0,
+    "version": "",
+    "quality": 1,
+    "stylize": 100
+  },
+  "adminMetadata": {
+    "createdAt": "2023-11-28T05:43:41.678Z",
+    "lastModified": "2023-11-28T05:43:41.678Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "",
+    "imageType": "generated",
+    "style": {
+      "primary": "",
+      "secondary": [],
+      "influences": []
+    },
+    "technical": {
+      "quality": "",
+      "renderStyle": "",
+      "detailLevel": "",
+      "lighting": ""
+    },
+    "colors": {
+      "palette": [],
+      "mood": "",
+      "contrast": ""
+    },
+    "tags": {
+      "style": [],
+      "technical": [],
+      "mood": []
+    }
+  }
 } 
