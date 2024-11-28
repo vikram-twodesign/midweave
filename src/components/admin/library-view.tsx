@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Loader2, Search, Trash2, Edit } from "lucide-react"
+import { Loader2, Search, Trash2, Edit, RefreshCw } from "lucide-react"
 import type { ImageEntryWithAnalysis } from "@/lib/types/schema"
-import { getAllEntries, searchEntries, deleteEntry, deleteEntries, updateEntry } from "@/lib/services/storage"
+import { getAllEntries, searchEntries, deleteEntry, deleteEntries, updateEntry, forceResyncAndClearCache } from "@/lib/services/storage"
 import { useToast } from "@/hooks/use-toast"
 import { TextareaWithError } from "@/components/ui/textarea-with-error"
 
@@ -168,95 +168,129 @@ export function LibraryView() {
     }
   }
 
-  const renderImageDetails = (entry: ImageEntryWithAnalysis) => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <h3 className="text-lg font-semibold mb-2">Image Details</h3>
-          <div className="space-y-2">
-            <div>
-              <span className="font-medium">Title:</span> {entry.title || 'Untitled'}
-            </div>
-            <div>
-              <span className="font-medium">Description:</span> {entry.description || 'No description'}
-            </div>
-            <div>
-              <span className="font-medium">Created:</span>{' '}
-              {new Date(entry.adminMetadata.createdAt).toLocaleDateString()}
-            </div>
-          </div>
-        </div>
+  const renderImageDetails = (entry: ImageEntryWithAnalysis) => {
+    const aiAnalysis = entry.aiAnalysis || {
+      description: entry.description || '',
+      imageType: 'generated',
+      style: {
+        primary: '',
+        secondary: [],
+        influences: []
+      },
+      technical: {
+        quality: '',
+        renderStyle: '',
+        detailLevel: '',
+        lighting: ''
+      },
+      colors: {
+        palette: [],
+        mood: '',
+        contrast: ''
+      },
+      tags: {
+        style: [],
+        technical: [],
+        mood: []
+      }
+    };
 
-        <div>
-          <h3 className="text-lg font-semibold mb-2">AI Analysis</h3>
-          <div className="space-y-2">
-            <div>
-              <span className="font-medium">Description:</span>{' '}
-              {entry.aiAnalysis.description}
-            </div>
-            <div>
-              <span className="font-medium">Style:</span>{' '}
-              {entry.aiAnalysis.style.primary}
-              {entry.aiAnalysis.style.secondary.length > 0 && (
-                <span className="text-sm text-muted-foreground">
-                  {' '}
-                  ({entry.aiAnalysis.style.secondary.join(', ')})
-                </span>
-              )}
-            </div>
-            <div>
-              <span className="font-medium">Technical:</span>{' '}
-              {entry.aiAnalysis.technical.quality}, {entry.aiAnalysis.technical.renderStyle}
-            </div>
-            <div>
-              <span className="font-medium">Tags:</span>{' '}
-              <span className="text-sm">
-                {[
-                  ...entry.aiAnalysis.tags.style,
-                  ...entry.aiAnalysis.tags.technical,
-                  ...entry.aiAnalysis.tags.mood,
-                ].join(', ')}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Midjourney Parameters</h3>
+    return (
+      <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <div>
-              <span className="font-medium">Style Reference:</span>{' '}
-              {entry.parameters.sref || 'None'}
-            </div>
-            <div>
-              <span className="font-medium">Prompt:</span>{' '}
-              {entry.parameters.prompt || 'None'}
-            </div>
-            <div>
-              <span className="font-medium">Style:</span>{' '}
-              {entry.parameters.style || 'None'}
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Image Details</h3>
+            <div className="space-y-2">
+              <div>
+                <span className="font-medium">Title:</span> {entry.title || 'Untitled'}
+              </div>
+              <div>
+                <span className="font-medium">Description:</span> {entry.description || 'No description'}
+              </div>
+              <div>
+                <span className="font-medium">Created:</span>{' '}
+                {new Date(entry.adminMetadata.createdAt).toLocaleDateString()}
+              </div>
             </div>
           </div>
-          <div className="space-y-2">
-            <div>
-              <span className="font-medium">Aspect Ratio:</span>{' '}
-              {entry.parameters.ar || 'Default'}
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">AI Analysis</h3>
+            <div className="space-y-2">
+              <div>
+                <span className="font-medium">Description:</span>{' '}
+                {aiAnalysis.description || 'No description'}
+              </div>
+              <div>
+                <span className="font-medium">Image Type:</span>{' '}
+                {aiAnalysis.imageType}
+              </div>
+              <div>
+                <span className="font-medium">Style:</span>{' '}
+                {aiAnalysis.style.primary || 'Not specified'}
+                {aiAnalysis.style.secondary.length > 0 && (
+                  <span className="text-sm text-muted-foreground">
+                    {' '}
+                    ({aiAnalysis.style.secondary.join(', ')})
+                  </span>
+                )}
+              </div>
+              <div>
+                <span className="font-medium">Technical:</span>{' '}
+                {[aiAnalysis.technical.quality, aiAnalysis.technical.renderStyle]
+                  .filter(Boolean)
+                  .join(', ') || 'Not specified'}
+              </div>
+              <div>
+                <span className="font-medium">Tags:</span>{' '}
+                <span className="text-sm">
+                  {[
+                    ...aiAnalysis.tags.style,
+                    ...aiAnalysis.tags.technical,
+                    ...aiAnalysis.tags.mood,
+                  ].filter(Boolean).join(', ') || 'No tags'}
+                </span>
+              </div>
             </div>
-            <div>
-              <span className="font-medium">Version:</span>{' '}
-              {entry.parameters.version || 'Default'}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Midjourney Parameters</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div>
+                <span className="font-medium">Style Reference:</span>{' '}
+                {entry.parameters.sref || 'None'}
+              </div>
+              <div>
+                <span className="font-medium">Prompt:</span>{' '}
+                {entry.parameters.prompt || 'None'}
+              </div>
+              <div>
+                <span className="font-medium">Style:</span>{' '}
+                {entry.parameters.style || 'None'}
+              </div>
             </div>
-            <div>
-              <span className="font-medium">Quality:</span>{' '}
-              {entry.parameters.quality || 'Default'}
+            <div className="space-y-2">
+              <div>
+                <span className="font-medium">Aspect Ratio:</span>{' '}
+                {entry.parameters.ar || 'Default'}
+              </div>
+              <div>
+                <span className="font-medium">Version:</span>{' '}
+                {entry.parameters.version || 'Default'}
+              </div>
+              <div>
+                <span className="font-medium">Quality:</span>{' '}
+                {entry.parameters.quality || 'Default'}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (isLoading) {
     return (
@@ -279,16 +313,44 @@ export function LibraryView() {
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        {selectedEntries.size > 0 && (
+        <div className="flex gap-2">
+          {selectedEntries.size > 0 && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBatchDelete}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Selected ({selectedEntries.size})
+            </Button>
+          )}
           <Button
-            variant="destructive"
+            variant="outline"
             size="sm"
-            onClick={handleBatchDelete}
+            onClick={async () => {
+              try {
+                setIsLoading(true);
+                await forceResyncAndClearCache();
+                await loadEntries();
+                toast({
+                  title: "Success",
+                  description: "Library resynced successfully"
+                });
+              } catch (error) {
+                toast({
+                  title: "Error",
+                  description: "Failed to resync library",
+                  variant: "destructive"
+                });
+              } finally {
+                setIsLoading(false);
+              }
+            }}
           >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete Selected ({selectedEntries.size})
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Resync Library
           </Button>
-        )}
+        </div>
       </div>
 
       {/* Bulk Selection Header */}
@@ -312,7 +374,7 @@ export function LibraryView() {
           {entries.map((entry) => (
             <Card 
               key={entry.id} 
-              className="group relative overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200"
+              className="group relative overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl"
               onClick={() => openPreviewModal(entry)}
             >
               <CardContent className="p-0">
@@ -333,7 +395,7 @@ export function LibraryView() {
                 <div className="aspect-square">
                   <img
                     src={entry.images[0].url}
-                    alt={entry.title}
+                    alt={entry.parameters.prompt || "Style preview"}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -356,46 +418,6 @@ export function LibraryView() {
                     )}
                   </div>
                 </div>
-
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-between text-white">
-                  <div className="space-y-2">
-                    <h3 className="font-semibold truncate">{entry.title}</h3>
-                    <p className="text-sm opacity-80 line-clamp-2">
-                      {entry.parameters.prompt || "No prompt provided"}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="text-xs opacity-80">
-                      <Label>Style Reference:</Label>
-                      <div className="font-mono truncate">{entry.parameters.sref}</div>
-                    </div>
-                    
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openPreviewModal(entry);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          entry.id && handleDelete(entry.id);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           ))}
@@ -406,9 +428,9 @@ export function LibraryView() {
       <Dialog open={showPreviewModal} onOpenChange={setShowPreviewModal}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Edit Style</DialogTitle>
+            <DialogTitle>Image Details</DialogTitle>
             <DialogDescription>
-              Update style details and AI analysis
+              View and edit image details, AI analysis, and Midjourney parameters
             </DialogDescription>
           </DialogHeader>
           
@@ -419,7 +441,7 @@ export function LibraryView() {
                 <div className="aspect-square rounded-lg overflow-hidden">
                   <img
                     src={editedEntry.images[0].url}
-                    alt={editedEntry.title}
+                    alt={editedEntry.description || 'Style preview'}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -429,7 +451,7 @@ export function LibraryView() {
                       <div key={i} className="aspect-square rounded overflow-hidden">
                         <img
                           src={img.url}
-                          alt={`Variant ${i + 2}`}
+                          alt={`Style variant ${i + 2}`}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -440,20 +462,13 @@ export function LibraryView() {
 
               {/* Details */}
               <div className="space-y-6 overflow-y-auto max-h-[70vh]">
-                <div>
-                  <Label>Title</Label>
-                  <Input
-                    value={editedEntry.title}
-                    onChange={(e) => setEditedEntry({...editedEntry, title: e.target.value})}
-                  />
-                </div>
-
                 {/* Parameters Section */}
                 <div className="space-y-4">
                   <h3 className="font-semibold">Midjourney Parameters</h3>
                   <div>
-                    <Label>Style Reference</Label>
+                    <Label htmlFor="sref">Style Reference</Label>
                     <Input
+                      id="sref"
                       value={editedEntry.parameters.sref}
                       onChange={(e) => setEditedEntry({
                         ...editedEntry,
@@ -463,8 +478,9 @@ export function LibraryView() {
                   </div>
 
                   <div>
-                    <Label>Prompt</Label>
+                    <Label htmlFor="prompt">Prompt</Label>
                     <TextareaWithError
+                      id="prompt"
                       value={editedEntry.parameters.prompt || ""}
                       onChange={(e) => setEditedEntry({
                         ...editedEntry,
@@ -478,83 +494,77 @@ export function LibraryView() {
                   <div className="space-y-4">
                     <h3 className="font-semibold">AI Analysis</h3>
                     
-                    {/* Basic Info */}
-                    <div>
-                      <Label>Style</Label>
-                      <Input
-                        value={editedEntry.parameters.style || ''}
-                        onChange={(e) => setEditedEntry({
-                          ...editedEntry,
-                          parameters: {
-                            ...editedEntry.parameters,
-                            style: e.target.value
-                          }
-                        })}
-                      />
-                    </div>
-
+                    {/* Description */}
                     <div>
                       <Label>Description</Label>
                       <TextareaWithError
-                        value={editedEntry.description || ''}
+                        value={editedEntry.aiAnalysis.description || ''}
                         onChange={(e) => setEditedEntry({
                           ...editedEntry,
-                          description: e.target.value
+                          aiAnalysis: {
+                            ...editedEntry.aiAnalysis!,
+                            description: e.target.value
+                          }
                         })}
                       />
                     </div>
 
                     {/* Style Section */}
                     <div className="space-y-2">
-                      <Label>Primary Style</Label>
-                      <Input
-                        value={editedEntry.aiAnalysis.style.primary}
-                        onChange={(e) => {
-                          const newAiAnalysis = {
-                            ...editedEntry.aiAnalysis!,
-                            style: {
-                              ...editedEntry.aiAnalysis!.style,
-                              primary: e.target.value
-                            }
-                          }
-                          setEditedEntry({
+                      <h4 className="text-sm font-medium">Style</h4>
+                      
+                      <div>
+                        <Label>Primary Style</Label>
+                        <Input
+                          value={editedEntry.aiAnalysis.style.primary || ''}
+                          onChange={(e) => setEditedEntry({
                             ...editedEntry,
-                            aiAnalysis: newAiAnalysis
-                          })
-                        }}
-                      />
-
-                      <Label>Secondary Styles</Label>
-                      <TextareaWithError
-                        value={editedEntry.aiAnalysis.style.secondary.join(", ")}
-                        onChange={(e) => setEditedEntry({
-                          ...editedEntry,
-                          aiAnalysis: {
-                            ...editedEntry.aiAnalysis!,
-                            style: {
-                              ...editedEntry.aiAnalysis!.style,
-                              secondary: e.target.value.split(",").map(s => s.trim())
+                            aiAnalysis: {
+                              ...editedEntry.aiAnalysis!,
+                              style: {
+                                ...editedEntry.aiAnalysis!.style,
+                                primary: e.target.value
+                              }
                             }
-                          }
-                        })}
-                        placeholder="Enter styles separated by commas"
-                      />
+                          })}
+                        />
+                      </div>
 
-                      <Label>Influences</Label>
-                      <TextareaWithError
-                        value={editedEntry.aiAnalysis.style.influences.join(", ")}
-                        onChange={(e) => setEditedEntry({
-                          ...editedEntry,
-                          aiAnalysis: {
-                            ...editedEntry.aiAnalysis!,
-                            style: {
-                              ...editedEntry.aiAnalysis!.style,
-                              influences: e.target.value.split(",").map(s => s.trim())
+                      <div>
+                        <Label>Secondary Styles</Label>
+                        <TextareaWithError
+                          value={editedEntry.aiAnalysis.style.secondary.join(", ")}
+                          onChange={(e) => setEditedEntry({
+                            ...editedEntry,
+                            aiAnalysis: {
+                              ...editedEntry.aiAnalysis!,
+                              style: {
+                                ...editedEntry.aiAnalysis!.style,
+                                secondary: e.target.value.split(",").map(s => s.trim())
+                              }
                             }
-                          }
-                        })}
-                        placeholder="Enter influences separated by commas"
-                      />
+                          })}
+                          placeholder="Enter styles separated by commas"
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Influences</Label>
+                        <TextareaWithError
+                          value={editedEntry.aiAnalysis.style.influences.join(", ")}
+                          onChange={(e) => setEditedEntry({
+                            ...editedEntry,
+                            aiAnalysis: {
+                              ...editedEntry.aiAnalysis!,
+                              style: {
+                                ...editedEntry.aiAnalysis!.style,
+                                influences: e.target.value.split(",").map(s => s.trim())
+                              }
+                            }
+                          })}
+                          placeholder="Enter influences separated by commas"
+                        />
+                      </div>
                     </div>
 
                     {/* Technical Section */}
@@ -564,7 +574,7 @@ export function LibraryView() {
                       <div>
                         <Label>Quality</Label>
                         <Input
-                          value={editedEntry.aiAnalysis.technical.quality}
+                          value={editedEntry.aiAnalysis.technical.quality || ''}
                           onChange={(e) => setEditedEntry({
                             ...editedEntry,
                             aiAnalysis: {
@@ -578,7 +588,7 @@ export function LibraryView() {
                       <div>
                         <Label>Render Style</Label>
                         <Input
-                          value={editedEntry.aiAnalysis.technical.renderStyle}
+                          value={editedEntry.aiAnalysis.technical.renderStyle || ''}
                           onChange={(e) => setEditedEntry({
                             ...editedEntry,
                             aiAnalysis: {
@@ -592,7 +602,7 @@ export function LibraryView() {
                       <div>
                         <Label>Detail Level</Label>
                         <Input
-                          value={editedEntry.aiAnalysis.technical.detailLevel}
+                          value={editedEntry.aiAnalysis.technical.detailLevel || ''}
                           onChange={(e) => setEditedEntry({
                             ...editedEntry,
                             aiAnalysis: {
@@ -606,7 +616,7 @@ export function LibraryView() {
                       <div>
                         <Label>Lighting</Label>
                         <Input
-                          value={editedEntry.aiAnalysis.technical.lighting}
+                          value={editedEntry.aiAnalysis.technical.lighting || ''}
                           onChange={(e) => setEditedEntry({
                             ...editedEntry,
                             aiAnalysis: {
@@ -625,7 +635,7 @@ export function LibraryView() {
                       <div>
                         <Label>Color Mood</Label>
                         <Input
-                          value={editedEntry.aiAnalysis.colors.mood}
+                          value={editedEntry.aiAnalysis.colors.mood || ''}
                           onChange={(e) => setEditedEntry({
                             ...editedEntry,
                             aiAnalysis: {
@@ -657,7 +667,7 @@ export function LibraryView() {
                       <div>
                         <Label>Contrast</Label>
                         <Input
-                          value={editedEntry.aiAnalysis.colors.contrast}
+                          value={editedEntry.aiAnalysis.colors.contrast || ''}
                           onChange={(e) => setEditedEntry({
                             ...editedEntry,
                             aiAnalysis: {

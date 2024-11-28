@@ -4,8 +4,14 @@ const nextConfig = {
   basePath: process.env.NODE_ENV === 'production' ? '/midweave' : '',
   trailingSlash: true,
   images: {
-    loader: 'custom',
-    loaderFile: './src/lib/image-loader.ts',
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+        pathname: '**',
+      },
+    ],
   }
 }
 

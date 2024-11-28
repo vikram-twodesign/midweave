@@ -1,21 +1,20 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getAllEntries } from "@/lib/services/storage"
-import type { ImageEntryWithAnalysis } from "@/lib/types/schema"
 import { Header } from "@/components/layout/header"
-import { ImageGrid } from "@/components/gallery/image-grid"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { routes } from "@/lib/utils"
-import Link from "next/link"
-import { Github, Twitter, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
+import { ImageSlideshow } from "@/components/gallery/image-slideshow"
+import { getAllEntries } from "@/lib/services/storage"
+import type { ImageEntryWithAnalysis } from "@/lib/types/schema"
+import { Github, Twitter } from "lucide-react"
 
-export default function HomePage() {
-  const [entries, setEntries] = useState<ImageEntryWithAnalysis[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+export default function AboutPage() {
   const router = useRouter()
+  const [entries, setEntries] = useState<ImageEntryWithAnalysis[]>([])
 
   useEffect(() => {
     const loadEntries = async () => {
@@ -24,8 +23,6 @@ export default function HomePage() {
         setEntries(data)
       } catch (error) {
         console.error('Error loading entries:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
 
@@ -57,43 +54,71 @@ export default function HomePage() {
       </Header>
 
       <main className="flex-1">
-        <section className="relative overflow-hidden min-h-[600px] flex items-center bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 bg-[length:400%_400%] animate-gradient">
+        <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 bg-[length:400%_400%] animate-gradient min-h-[700px] flex items-center">
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#3b82f6,#8b5cf6,#d946ef,#3b82f6)] opacity-50 mix-blend-soft-light animate-gradient-slow" />
-
-          {/* Content */}
-          <div className="container mx-auto px-4 relative">
+          
+          <div className="container mx-auto px-4 py-32 relative">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-3xl mx-auto text-center"
+              className="max-w-3xl mx-auto"
             >
-              <div className="inline-flex items-center justify-center space-x-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 mb-8 shadow-lg">
-                <Sparkles className="h-4 w-4 text-white animate-pulse" />
-                <span className="text-sm font-medium text-white">Discover the best Midjourney styles on the internet</span>
-              </div>
-              <h1 className="text-4xl font-bold tracking-tight mb-6 sm:text-5xl text-white drop-shadow-md">
-                Welcome to Midweave
-              </h1>
-              <div className="space-y-6">
-                <p className="text-lg leading-relaxed text-white/90 drop-shadow">
-                  A carefully curated collection of exceptional Midjourney styles and their parameters. 
-                  Each image in our library has been hand-picked and analyzed to help you discover 
-                  the perfect parameters for your next creation.
+              <h1 className="text-4xl font-bold mb-12 text-white text-center drop-shadow-md">About Midweave</h1>
+              
+              <div className="prose prose-lg prose-invert mx-auto">
+                <p className="text-lg text-white/90 drop-shadow mb-12">
+                  Midweave was born from a simple idea: to create a curated space where artists and creators 
+                  could discover and share the perfect Midjourney parameters for their creative projects.
                 </p>
-                <p className="text-lg leading-relaxed text-white/90 drop-shadow">
-                  Browse, search, and instantly copy any style settings that catch your eye—it's like 
-                  a recipe book for Midjourney magic.
-                </p>
+
+                {entries.length > 0 && (
+                  <div className="mt-12">
+                    <ImageSlideshow 
+                      entries={entries} 
+                      interval={6000} 
+                      showNavigation={false}
+                      showCaption={false}
+                    />
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
         </section>
 
-        <section className="py-16">
+        <section className="py-24 bg-background">
           <div className="container mx-auto px-4">
-            <ImageGrid entries={entries} isLoading={isLoading} />
+            <div className="max-w-3xl mx-auto space-y-16">
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold">Our Mission</h2>
+                <p className="text-muted-foreground text-lg">
+                  We believe that AI art generation should be accessible and inspiring. Our platform serves 
+                  as a bridge between imagination and execution, helping creators find the perfect parameters 
+                  to bring their visions to life.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold">What We Offer</h2>
+                <ul className="list-disc list-inside text-muted-foreground space-y-3 text-lg">
+                  <li>Curated collection of exceptional Midjourney styles</li>
+                  <li>Detailed parameter analysis for each image</li>
+                  <li>Easy-to-copy settings for immediate use</li>
+                  <li>Regular updates with new styles and techniques</li>
+                </ul>
+              </div>
+
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold">Join Our Community</h2>
+                <p className="text-muted-foreground text-lg">
+                  Whether you're a seasoned artist or just starting your journey with AI-generated art, 
+                  Midweave is here to help you explore, create, and push the boundaries of what's possible 
+                  with Midjourney.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -136,28 +161,27 @@ export default function HomePage() {
             <div>
               <h3 className="font-semibold mb-4">Connect</h3>
               <div className="flex space-x-4">
-                <Link 
-                  href="https://github.com/your-repo" 
+                <a
+                  href="https://github.com"
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary"
                 >
                   <Github className="h-5 w-5" />
-                </Link>
-                <Link 
-                  href="https://twitter.com/your-handle" 
+                </a>
+                <a
+                  href="https://twitter.com"
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary"
                 >
                   <Twitter className="h-5 w-5" />
-                </Link>
+                </a>
               </div>
             </div>
-          </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} Midweave. All rights reserved.</p>
           </div>
         </div>
       </footer>
     </div>
   )
-}
+} 

@@ -33,6 +33,8 @@
 - [x] Implement automatic tag generation
 - [x] Add color palette detection
 - [x] Build style categorization
+- [ ] Add Dark Mode
+- [ ] Implement extraction of images and Midjourney parameters from Twitter posts
 
 ## Phase 3: GitHub Storage Implementation ✅
 ### Storage Service Setup ✅
@@ -67,21 +69,17 @@
 - [ ] Add tag-based filtering
 - [ ] Add style-based filtering
 - [ ] Implement advanced search options
-- [ ] Add sorting by various parameters (date, style, etc.)
 - [ ] Implement fuzzy search for better results
 
 #### UI Enhancements
-- [ ] Add image zoom functionality
-- [ ] Implement lightbox view
-- [ ] Add keyboard navigation
 - [ ] Improve mobile experience
+- [ ] Add Dark Mode
 - [ ] Add image loading placeholders
 - [ ] Implement infinite scroll
 - [ ] Add smooth transitions
 
 #### Gallery Features
 - [ ] Add style categories/collections
-- [ ] Implement favorites/bookmarks
 - [ ] Add share functionality
 - [ ] Implement view count tracking
 - [ ] Add popular styles section

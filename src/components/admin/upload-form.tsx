@@ -17,7 +17,7 @@ import { AIAnalysis } from "@/lib/types/schema"
 import { useToast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useRouter } from "next/navigation"
-import { getRoute } from "@/lib/utils"
+import { routes } from "@/lib/utils"
 
 // Type definitions for array fields
 type StyleFields = 'secondary' | 'influences';
@@ -293,7 +293,7 @@ export function UploadForm() {
       setAiAnalysis({})
       
       // Fix: Use correct route path
-      router.push(getRoute('/admin'))
+      router.push(routes.admin)
     } catch (error) {
       console.error('Upload error:', error)
       toast({

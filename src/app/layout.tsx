@@ -1,11 +1,13 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { Inter } from "next/font/google"
+import { Libre_Franklin } from "next/font/google"
 import { RootLayoutClient } from "@/components/layout/root-layout"
 import Script from "next/script"
 
-const inter = Inter({ 
+const libreFranklin = Libre_Franklin({ 
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-libre-franklin',
   display: 'swap',
 })
 
@@ -25,10 +27,10 @@ function EnvironmentScript() {
       id="environment-script"
       strategy="beforeInteractive"
       dangerouslySetInnerHTML={{
-        __html: `window.__ENV__ = ${JSON.stringify(publicEnvVars)};`,
+        __html: `window.env = ${JSON.stringify(publicEnvVars)}`,
       }}
     />
-  );
+  )
 }
 
 export default function RootLayout({
@@ -37,11 +39,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={libreFranklin.variable} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <EnvironmentScript />
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>
     </html>
-  );
+  )
 }
