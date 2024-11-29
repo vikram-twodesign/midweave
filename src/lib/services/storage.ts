@@ -1,9 +1,12 @@
 import type { ImageEntry as SchemaImageEntry, ImageEntryWithAnalysis, CreateImageEntry, AIAnalysis } from '@/lib/types/schema';
 import type { ImageEntry as DBImageEntry } from '@/lib/db';
+import type { BatchFileUpdate, ImageUpload } from './github';
 import { db } from '@/lib/db';
 import { GitHubService } from './github';
 
 const github = new GitHubService();
+
+let resyncPromise: Promise<void> | null = null;
 
 // Helper function to ensure complete image data
 const ensureCompleteImageData = (images: Array<{ url: string; thumbnail?: string; size?: number }>): Array<{ url: string; thumbnail: string; size: number }> => {
@@ -227,69 +230,108 @@ const convertGitHubEntryToSchema = (entry: any): ImageEntryWithAnalysis => {
   };
 };
 
+// Type guard to check if object is a File or image data
+type ImageFile = File | { url: string; thumbnail: string; size: number };
+
+const isFile = (file: ImageFile): file is File => {
+  return file instanceof File;
+};
+
+// Helper function to process files for upload
+const processFiles = (files: ImageFile[]): ImageUpload[] => {
+  return files.map(file => {
+    if (isFile(file)) {
+      return {
+        file,
+        path: `images/originals/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toUpperCase()}`
+      };
+    } else {
+      return {
+        file: {
+          url: file.url,
+          thumbnail: file.thumbnail,
+          size: file.size
+        },
+        path: `images/originals/${Date.now()}_${file.url.split('/').pop()?.replace(/[^a-zA-Z0-9._-]/g, '_').toUpperCase() || 'IMAGE'}`
+      };
+    }
+  });
+};
+
 export const resyncLibrary = async (): Promise<void> => {
-  console.log('Starting library resync...');
-  
-  try {
-    // Get valid entries from GitHub
-    const allEntries = await github.resyncLibrary();
-    const validEntries = allEntries.filter(validateGitHubEntry);
-    
-    // Log validation results
-    console.log('Entry validation results:', {
-      total: allEntries.length,
-      valid: validEntries.length,
-      invalid: allEntries.length - validEntries.length,
-      invalidEntries: allEntries
-        .filter(e => !validateGitHubEntry(e))
-        .map(e => ({ id: (e as any).id }))
-    });
-
-    console.log('Received valid entries from GitHub:', { count: validEntries.length });
-
-    // Clear local database
-    await db.entries.clear();
-    console.log('Cleared local database');
-
-    // Add valid entries to local database
-    let addedCount = 0;
-    const errors: string[] = [];
-
-    for (const entry of validEntries) {
-      try {
-        const numericId = parseInt(entry.id, 10);
-        if (!isNaN(numericId)) {
-          const now = new Date();
-          // Convert GitHub entry to schema-compliant entry
-          const schemaEntry = convertGitHubEntryToSchema(entry);
-          const dbEntry = convertToDBEntry(schemaEntry, now);
-          await db.entries.put({ ...dbEntry, id: numericId });
-          addedCount++;
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        errors.push(`Failed to add entry ${entry.id}: ${errorMessage}`);
-        console.warn(`Failed to add entry ${entry.id}:`, error);
-      }
-    }
-
-    // Log results
-    console.log('Library resync completed:', {
-      entriesProcessed: validEntries.length,
-      entriesAdded: addedCount,
-      errors: errors.length > 0 ? errors : undefined
-    });
-
-    // If no entries were added successfully, throw an error
-    if (addedCount === 0) {
-      throw new Error('Failed to add any entries during resync');
-    }
-  } catch (error) {
-    console.error('Error during library resync:', error);
-    throw new Error(
-      `Failed to resync library: ${error instanceof Error ? error.message : 'Unknown error'}`
-    );
+  // If a resync is already in progress, return the existing promise
+  if (resyncPromise) {
+    return resyncPromise;
   }
+
+  console.debug('Starting library resync...');
+  
+  resyncPromise = (async () => {
+    try {
+      // Get valid entries from GitHub
+      const allEntries = await github.resyncLibrary();
+      const validEntries = allEntries.filter(validateGitHubEntry);
+      
+      // Log validation results
+      console.debug('Entry validation results:', {
+        total: allEntries.length,
+        valid: validEntries.length,
+        invalid: allEntries.length - validEntries.length,
+        invalidEntries: allEntries
+          .filter(e => !validateGitHubEntry(e))
+          .map(e => ({ id: (e as any).id }))
+      });
+
+      console.debug('Received valid entries from GitHub:', { count: validEntries.length });
+
+      // Clear local database
+      await db.entries.clear();
+      console.debug('Cleared local database');
+
+      // Add valid entries to local database
+      let addedCount = 0;
+      const errors: string[] = [];
+
+      for (const entry of validEntries) {
+        try {
+          const numericId = parseInt(entry.id, 10);
+          if (!isNaN(numericId)) {
+            const now = new Date();
+            // Convert GitHub entry to schema-compliant entry
+            const schemaEntry = convertGitHubEntryToSchema(entry);
+            const dbEntry = convertToDBEntry(schemaEntry, now);
+            await db.entries.put({ ...dbEntry, id: numericId });
+            addedCount++;
+          }
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          errors.push(`Failed to add entry ${entry.id}: ${errorMessage}`);
+          console.warn(`Failed to add entry ${entry.id}:`, error);
+        }
+      }
+
+      // Log results
+      console.debug('Library resync completed:', {
+        entriesProcessed: validEntries.length,
+        entriesAdded: addedCount,
+        errors: errors.length > 0 ? errors : undefined
+      });
+
+      // If no entries were added successfully, throw an error
+      if (addedCount === 0) {
+        throw new Error('Failed to add any entries during resync');
+      }
+    } catch (error) {
+      console.error('Error during library resync:', error);
+      throw new Error(
+        `Failed to resync library: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    } finally {
+      resyncPromise = null;
+    }
+  })();
+
+  return resyncPromise;
 };
 
 export const getAllEntries = async (): Promise<ImageEntryWithAnalysis[]> => {
@@ -406,14 +448,18 @@ export const updateEntry = async (
 
 export const uploadImages = async (files: File[]): Promise<string[]> => {
   try {
-    const uploadPromises = files.map(async (file) => {
-      const timestamp = Date.now();
-      const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toUpperCase();
-      const path = `images/originals/${timestamp}_${safeFileName}`;
-      return await github.uploadImage(file, path);
-    });
-
-    return await Promise.all(uploadPromises);
+    console.debug('Starting image upload:', { count: files.length });
+    
+    // Process files and create image uploads
+    const imageUploads = processFiles(files);
+    
+    // Upload images with metadata
+    await github.uploadImagesWithMetadata(imageUploads);
+    
+    // Return the paths of the uploaded images
+    const uploadedPaths = imageUploads.map(upload => upload.path);
+    console.debug('All images uploaded successfully:', { count: uploadedPaths.length });
+    return uploadedPaths;
   } catch (error) {
     console.error('Error uploading images:', error);
     throw new Error('Failed to upload images');
@@ -427,8 +473,41 @@ export const saveEntry = async (entry: CreateImageEntry): Promise<string> => {
     
     const id = await db.entries.add(dbEntry);
     const fullEntry = convertToApiEntry({ ...dbEntry, id });
-    await github.saveMetadata(fullEntry, `data/entries/${id}.json`);
+
+    // Create metadata update
+    const metadataPath = `data/entries/${id}.json`;
+    const metadataContent = Buffer.from(JSON.stringify(fullEntry, null, 2)).toString('base64');
     
+    // Get raw files that need to be uploaded
+    const rawFiles = entry.images
+      .filter(img => img instanceof File) as File[];
+    
+    // Process files and create batch updates
+    const imageUploads = processFiles(rawFiles);
+    const batchUpdates: BatchFileUpdate[] = [];
+
+    // Add metadata update
+    batchUpdates.push({
+      path: metadataPath,
+      content: metadataContent,
+      message: `Create entry ${id}`
+    });
+
+    // Add image updates
+    for (const upload of imageUploads) {
+      if (upload.file instanceof File) {
+        const base64Content = await github.fileToBase64(upload.file);
+        batchUpdates.push({
+          path: upload.path,
+          content: base64Content,
+          message: `Upload image: ${upload.path.split('/').pop()}`
+        });
+      }
+    }
+
+    // Perform batch update
+    await github.batchUpdateFiles(batchUpdates);
+
     return String(id);
   } catch (error) {
     console.error('Error saving entry:', error);
@@ -445,5 +524,43 @@ export const forceResyncAndClearCache = async (): Promise<void> => {
     console.error('Error during force resync:', error);
     // Don't throw here, as the database operations might have partially succeeded
     console.warn('Force resync completed with errors:', error);
+  }
+};
+
+export const syncWithGitHub = async (): Promise<void> => {
+  try {
+    // Get all entries from GitHub
+    const githubEntries = await github.listEntries();
+    
+    // Process entries and update local database
+    const processedEntries = githubEntries
+      .filter(validateGitHubEntry)
+      .map(convertGitHubEntryToSchema);
+      
+    // Get files that need to be uploaded
+    const files = processedEntries.flatMap(entry => 
+      entry.images.map(img => ({
+        url: img.url,
+        thumbnail: img.thumbnail,
+        size: img.size
+      }))
+    );
+    
+    // Process and upload files
+    const imageUploads = processFiles(files);
+    if (imageUploads.length > 0) {
+      await github.uploadImagesWithMetadata(imageUploads);
+    }
+
+    // Update local database with processed entries
+    await db.transaction('rw', db.entries, async () => {
+      await db.entries.clear();
+      await db.entries.bulkAdd(processedEntries.map(entry => convertToDBEntry(entry)));
+    });
+
+    console.debug('GitHub sync completed successfully');
+  } catch (error) {
+    console.error('Error syncing with GitHub:', error);
+    throw error;
   }
 };

@@ -63,49 +63,69 @@ interface Entry {
   };
 }
 
+export interface BatchFileUpdate {
+  path: string;
+  content: string;
+  message: string;
+}
+
+export interface ImageUpload {
+  file: File | {
+    url: string;
+    thumbnail: string;
+    size: number;
+  };
+  path: string;
+}
+
 export class GitHubService {
-  private octokit: Octokit;
-  private owner: string;
-  private repo: string;
-  private branch: string;
-  private baseUrl: string;
+  private static instance: GitHubService;
+  private initialized = false;
+  private syncInProgress = false;
+  private octokit!: Octokit;
+  private owner: string = '';
+  private repo: string = '';
+  private branch: string = '';
+  private baseUrl: string = '';
 
   constructor() {
+    if (GitHubService.instance) {
+      return GitHubService.instance;
+    }
+
     const { isValid, errors } = validateConfig();
     if (!isValid) {
       console.error('GitHub configuration errors:', errors);
       throw new Error(`GitHub service configuration error: ${errors.join(', ')}`);
     }
 
-    if (!config.github.owner || !config.github.repo) {
-      console.error('GitHub repository not configured correctly:', {
-        owner: config.github.owner,
-        repo: config.github.repo,
-        repository: process.env.NEXT_PUBLIC_REPOSITORY
-      });
-      throw new Error('GitHub repository must be configured as "owner/repo" in NEXT_PUBLIC_REPOSITORY');
-    }
-
-    this.octokit = new Octokit({
-      auth: config.github.token,
-    });
     this.owner = config.github.owner;
     this.repo = config.github.repo;
     this.branch = config.github.branch;
     this.baseUrl = `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${this.branch}`;
+    this.octokit = new Octokit({ auth: config.github.token });
 
-    console.log('GitHub service initialized with:', {
-      owner: this.owner,
-      repo: this.repo,
-      branch: this.branch,
-      baseUrl: this.baseUrl
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('GitHub service initialized with:', {
+        owner: this.owner,
+        repo: this.repo,
+        branch: this.branch,
+        baseUrl: this.baseUrl
+      });
+    }
+
+    GitHubService.instance = this;
+    this.initialized = true;
+  }
+
+  private ensureInitialized(): void {
+    if (!this.initialized) {
+      throw new Error('GitHubService not properly initialized');
+    }
   }
 
   private getFullUrl(path: string): string {
-    // Remove any leading slashes and join with base URL
     const cleanPath = path.replace(/^\/+/, '');
-    // If the path is already a full URL, return it as is
     if (cleanPath.startsWith('http')) {
       return cleanPath;
     }
@@ -125,7 +145,6 @@ export class GitHubService {
         throw new Error('Path points to a directory, not a file');
       }
 
-      // Type guard to ensure we have a file with content
       if (response.data.type === 'file' && response.data.content) {
         return {
           content: Base64.decode(response.data.content),
@@ -143,9 +162,7 @@ export class GitHubService {
   }
 
   async listFiles(path: string): Promise<Array<{ name: string; path: string; type: string }>> {
-    if (!this.octokit) {
-      throw new Error('GitHub service is not properly configured.');
-    }
+    this.ensureInitialized();
 
     try {
       const response = await this.octokit.rest.repos.getContent({
@@ -169,6 +186,8 @@ export class GitHubService {
   }
 
   async getEntry(id: string): Promise<Entry | null> {
+    this.ensureInitialized();
+
     try {
       const response = await this.octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
         owner: this.owner,
@@ -177,13 +196,11 @@ export class GitHubService {
         ref: this.branch,
       });
 
-      // Check if response is an array (directory listing) or not a file
       if (Array.isArray(response.data) || !('type' in response.data) || response.data.type !== 'file') {
         console.error(`No file content found for entry ${id}`);
         return null;
       }
 
-      // At this point TypeScript knows response.data is a file object
       const content = response.data.content;
       if (!content) {
         console.error(`Empty content for entry ${id}`);
@@ -210,7 +227,6 @@ export class GitHubService {
         return null;
       }
 
-      // Basic validation
       if (!entry || (typeof entry.id !== 'string' && typeof entry.id !== 'number')) {
         console.error(`Entry ${id} missing required id field`);
         return null;
@@ -228,14 +244,10 @@ export class GitHubService {
       
       console.log('Raw entry from GitHub:', entry);
       
-      // Process images to ensure URLs are correct
       if (Array.isArray(entry.images)) {
         entry.images = entry.images.map(image => {
-          // Fix malformed URLs by removing duplicate paths and nested directories
           const normalizeUrl = (url: string) => {
-            // Extract the filename from the path
             const filename = url.split('/').pop();
-            // Construct the correct URL with just images/originals/filename
             return `${this.baseUrl}/images/originals/${filename}`;
           };
 
@@ -249,14 +261,12 @@ export class GitHubService {
 
       console.log(`Raw entry from GitHub:`, entry);
       
-      // Process images to ensure URLs are correct
       if (Array.isArray(entry.images)) {
         entry.images.forEach(image => {
           console.log(`Processed image:`, image);
         });
       }
 
-      // Transform image URLs to full URLs if they're relative paths
       try {
         const processedImages = entry.images.map(img => {
           if (!img || typeof img.url !== 'string') {
@@ -274,7 +284,6 @@ export class GitHubService {
           return processedImage;
         }).filter((img): img is NonNullable<typeof img> => img !== null);
 
-        // If no valid images remain, skip this entry
         if (processedImages.length === 0) {
           console.error(`No valid images found in entry ${id}`);
           return null;
@@ -286,7 +295,6 @@ export class GitHubService {
         return null;
       }
 
-      // Ensure all required fields are present
       entry = {
         id: entry.id,
         title: entry.title || '',
@@ -359,7 +367,6 @@ export class GitHubService {
           }
         } catch (error) {
           console.error(`Error processing entry ${file.name}:`, error);
-          // Continue with other entries
         }
       });
 
@@ -367,52 +374,69 @@ export class GitHubService {
       return entries;
     } catch (error) {
       console.error('Error listing entries:', error);
-      return entries; // Return any entries we managed to process
+      return entries;
     }
   }
 
   async uploadImage(file: File, path: string): Promise<string> {
-    if (!this.octokit) {
-      throw new Error('GitHub service is not properly configured.');
-    }
+    this.ensureInitialized();
 
     try {
-      // Extract just the filename and ensure it's in the correct directory
       const filename = path.split('/').pop();
       if (!filename) {
         throw new Error('Invalid file path');
       }
-      const safePath = `images/originals/${filename}`;
-      
-      console.log('Uploading image:', { originalPath: path, safePath });
-      
-      const content = await this.fileToBase64(file);
-      const { sha } = await this.getFileContent(safePath);
+
+      const safePath = path.startsWith('images/originals/') ? path : `images/originals/${filename}`;
+      console.debug('Uploading image:', { originalPath: path, safePath });
+
+      const base64Content = await this.fileToBase64(file);
+
+      try {
+        const { sha } = await this.getFileContent(safePath);
+        
+        if (sha) {
+          const timestamp = Date.now();
+          const newFilename = `${timestamp}_${filename}`;
+          const newPath = `images/originals/${newFilename}`;
+          console.debug('File exists, using new path:', { originalPath: path, newPath });
+          return this.uploadImage(file, newPath);
+        }
+      } catch (error) {
+        if (!(error instanceof Error && error.message.includes('404'))) {
+          console.warn('Error checking existing file:', error);
+        }
+      }
 
       await this.octokit.rest.repos.createOrUpdateFileContents({
         owner: this.owner,
         repo: this.repo,
         path: safePath,
-        message: sha ? `Update ${safePath}` : `Create ${safePath}`,
-        content,
-        sha: sha || undefined,
+        message: `Upload image: ${filename}`,
+        content: base64Content,
         branch: this.branch
       });
 
-      console.log('Image uploaded successfully:', { safePath });
-      return this.getFullUrl(safePath);
+      console.debug('Image uploaded successfully:', { safePath });
+      return safePath;
     } catch (error) {
+      if (error instanceof Error && error.message.includes('409')) {
+        const timestamp = Date.now();
+        const newPath = `images/originals/${timestamp}_${path.split('/').pop()}`;
+        console.debug('Retrying upload with new path due to conflict:', { originalPath: path, newPath });
+        return this.uploadImage(file, newPath);
+      }
+
       console.error('Error uploading image:', error);
       throw error;
     }
   }
 
-  private async fileToBase64(file: File): Promise<string> {
+  async fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result as string;
-        // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
         const base64Content = base64String.split(',')[1];
         resolve(base64Content);
       };
@@ -423,16 +447,13 @@ export class GitHubService {
 
   async saveMetadata(data: Record<string, any>, path: string): Promise<void> {
     try {
-      // Clean the path to ensure proper formatting
       const cleanPath = path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/');
       const safePath = cleanPath.startsWith('data/entries/') ? cleanPath : `data/entries/${cleanPath}`;
       
-      // Convert data to base64
       const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
 
       console.log('Saving metadata:', { path: safePath, contentLength: content.length });
 
-      // Get the current file's SHA if it exists
       const { sha } = await this.getFileContent(safePath);
 
       await this.octokit.rest.repos.createOrUpdateFileContents({
@@ -456,7 +477,6 @@ export class GitHubService {
     try {
       console.log('Starting entry deletion process:', { id });
       
-      // Get the entry first to get all associated files
       const entry = await this.getEntry(id);
       if (!entry) {
         console.log(`Entry ${id} not found in GitHub, creating deletion marker`);
@@ -470,7 +490,6 @@ export class GitHubService {
         images: entry.images.map(img => img.url)
       });
 
-      // Delete all associated images first
       for (const img of entry.images) {
         const url = new URL(img.url);
         const filename = url.pathname.split('/').pop();
@@ -494,7 +513,6 @@ export class GitHubService {
         }
       }
 
-      // Delete the metadata file
       const metadataPath = `data/entries/${id}.json`;
       console.log('Deleting metadata file:', { metadataPath });
       
@@ -521,7 +539,6 @@ export class GitHubService {
       const timestamp = new Date().toISOString();
       const markerPath = '.github/deployment-markers/marker-' + timestamp.replace(/[:.]/g, '-') + '.txt';
       
-      // Create a unique marker file for each deployment
       await this.octokit.rest.repos.createOrUpdateFileContents({
         owner: this.owner,
         repo: this.repo,
@@ -534,7 +551,6 @@ export class GitHubService {
       console.log('Created deployment marker:', { markerPath, message });
     } catch (error) {
       console.error('Error creating deployment marker:', error);
-      // Don't throw error as this is just a helper function
     }
   }
 
@@ -553,7 +569,6 @@ export class GitHubService {
       });
     } catch (error) {
       console.error('Error creating deletion marker:', error);
-      // Don't throw error as this is just a helper function
     }
   }
 
@@ -573,7 +588,6 @@ export class GitHubService {
     try {
       console.log('Attempting to delete file:', { path });
       
-      // Get the latest SHA for the file
       const { sha } = await this.getFileContent(path);
       
       if (!sha) {
@@ -606,22 +620,18 @@ export class GitHubService {
     try {
       console.log('Starting batch deletion:', { ids });
       
-      // Create a single deployment marker for the batch
       const timestamp = new Date().toISOString();
       const batchId = Math.random().toString(36).substring(7);
       await this.createEmptyCommit(`Batch delete entries [${batchId}]`);
 
-      // Process deletions sequentially to avoid conflicts
       for (const id of ids) {
         try {
           await this.deleteEntry(id);
         } catch (error) {
           console.error(`Error deleting entry ${id}:`, error);
-          // Continue with other deletions
         }
       }
 
-      // Create a completion marker
       const completionPath = `.github/deployment-markers/batch-${batchId}-complete.txt`;
       await this.octokit.rest.repos.createOrUpdateFileContents({
         owner: this.owner,
@@ -640,9 +650,7 @@ export class GitHubService {
   }
 
   async getAllEntries(): Promise<Entry[]> {
-    if (!this.octokit) {
-      throw new Error('GitHub service is not properly configured.');
-    }
+    this.ensureInitialized();
 
     try {
       const entries: Entry[] = [];
@@ -654,7 +662,6 @@ export class GitHubService {
             const { content } = await this.getFileContent(file.path);
             const entry = JSON.parse(content) as Entry;
             
-            // Process images to ensure URLs are correct
             if (Array.isArray(entry.images)) {
               entry.images = entry.images.map(image => ({
                 ...image,
@@ -679,54 +686,60 @@ export class GitHubService {
     }
   }
 
-  private async triggerDeployment(action: string, details: Record<string, unknown> = {}): Promise<void> {
+  private async triggerDeployment(action: string, stats?: Record<string, any>): Promise<void> {
     try {
+      const deployId = Math.random().toString(36).substring(2, 8);
       const timestamp = new Date().toISOString();
-      const deployId = Math.random().toString(36).substring(7);
       const markerPath = `.github/deployment-markers/deploy-${deployId}.txt`;
-      
-      await this.octokit.rest.repos.createOrUpdateFileContents({
-        owner: this.owner,
-        repo: this.repo,
-        path: markerPath,
-        message: `Deployment trigger: ${action} [${deployId}]`,
-        content: Buffer.from(
-          JSON.stringify({
-            timestamp,
-            action,
-            deployId,
-            ...details
-          }, null, 2)
-        ).toString('base64'),
-        branch: this.branch
-      });
+      const content = {
+        action,
+        timestamp,
+        stats,
+        deployId
+      };
 
-      console.log('Deployment triggered:', { action, deployId });
+      try {
+        await this.octokit.rest.repos.createOrUpdateFileContents({
+          owner: this.owner,
+          repo: this.repo,
+          path: markerPath,
+          message: `Deployment trigger: ${action} [${timestamp}]`,
+          content: Buffer.from(JSON.stringify(content, null, 2)).toString('base64'),
+          branch: this.branch
+        });
+        console.log('Deployment triggered:', { action, deployId });
+      } catch (error) {
+        if (error instanceof Error) {
+          console.warn('Non-critical error creating deployment marker:', error.message);
+        }
+      }
     } catch (error) {
-      console.error('Error triggering deployment:', error);
-      // Don't throw error as this is a helper function
+      console.warn('Failed to trigger deployment:', error);
     }
   }
 
   async resyncLibrary(): Promise<Entry[]> {
+    if (this.syncInProgress) {
+      console.debug('Sync already in progress, skipping');
+      return [];
+    }
+
+    this.syncInProgress = true;
+    this.ensureInitialized();
+
     try {
-      console.log('Starting library resync...');
+      console.debug('Starting library resync...');
       
-      // Create a resync marker to trigger deployment
       await this.triggerDeployment('resync-start');
       
-      // First, get all entries from GitHub
       const allEntries = await this.getAllEntries();
-      console.log('Fetched entries from GitHub:', { count: allEntries.length });
+      console.debug('Fetched entries from GitHub:', { count: allEntries.length });
 
-      // Create a map of valid entries and their files
       const validEntries = new Map<string, Entry>();
       const validFiles = new Set<string>();
 
-      // Validate each entry and its files
       for (const entry of allEntries) {
         try {
-          // Check if all referenced images exist
           let isValid = true;
           for (const img of entry.images) {
             const url = new URL(img.url);
@@ -743,7 +756,7 @@ export class GitHubService {
                 console.warn(`Image file missing for entry ${entry.id}:`, imagePath);
               }
             } catch (error) {
-              console.error(`Error checking image ${imagePath}:`, error);
+              console.warn(`Error checking image ${imagePath}:`, error);
               isValid = false;
             }
           }
@@ -752,28 +765,14 @@ export class GitHubService {
             validEntries.set(entry.id, entry);
           }
         } catch (error) {
-          console.error(`Error validating entry ${entry.id}:`, error);
+          console.warn(`Error validating entry ${entry.id}:`, error);
         }
       }
 
-      // Get all files in the images directory
       const imageFiles = await this.listFiles('images/originals');
       const imagePaths = imageFiles.map(f => f.path);
-      console.log('Found image files:', { count: imagePaths.length });
+      console.debug('Found image files:', { count: imagePaths.length });
 
-      // Delete orphaned files (files not referenced by any valid entry)
-      for (const filePath of imagePaths) {
-        if (!validFiles.has(filePath)) {
-          console.log('Deleting orphaned file:', filePath);
-          try {
-            await this.deleteFile(filePath);
-          } catch (error) {
-            console.error(`Error deleting orphaned file ${filePath}:`, error);
-          }
-        }
-      }
-
-      // Create resync completion marker
       await this.triggerDeployment('resync-complete', {
         stats: {
           validEntries: validEntries.size,
@@ -782,7 +781,7 @@ export class GitHubService {
         }
       });
 
-      console.log('Library resync completed:', {
+      console.debug('Library resync completed:', {
         validEntries: validEntries.size,
         validFiles: validFiles.size,
         totalFiles: imagePaths.length
@@ -792,6 +791,8 @@ export class GitHubService {
     } catch (error) {
       console.error('Error during library resync:', error);
       throw error;
+    } finally {
+      this.syncInProgress = false;
     }
   }
 
@@ -808,6 +809,148 @@ export class GitHubService {
       if (error instanceof RequestError && error.status === 404) {
         return false;
       }
+      throw error;
+    }
+  }
+
+  async batchUpdateFiles(updates: BatchFileUpdate[]): Promise<void> {
+    this.ensureInitialized();
+
+    try {
+      // Get current tree
+      const { data: ref } = await this.octokit.rest.git.getRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${this.branch}`
+      });
+
+      const { data: commit } = await this.octokit.rest.git.getCommit({
+        owner: this.owner,
+        repo: this.repo,
+        commit_sha: ref.object.sha
+      });
+
+      const { data: baseTree } = await this.octokit.rest.git.getTree({
+        owner: this.owner,
+        repo: this.repo,
+        tree_sha: commit.tree.sha
+      });
+
+      // Create blobs for each file
+      const blobs = await Promise.all(
+        updates.map(async (update) => {
+          const { data } = await this.octokit.rest.git.createBlob({
+            owner: this.owner,
+            repo: this.repo,
+            content: update.content,
+            encoding: 'base64'
+          });
+          return {
+            path: update.path,
+            mode: '100644' as const,
+            type: 'blob' as const,
+            sha: data.sha
+          };
+        })
+      );
+
+      // Create new tree
+      const { data: newTree } = await this.octokit.rest.git.createTree({
+        owner: this.owner,
+        repo: this.repo,
+        base_tree: baseTree.sha,
+        tree: blobs
+      });
+
+      // Create commit
+      const { data: newCommit } = await this.octokit.rest.git.createCommit({
+        owner: this.owner,
+        repo: this.repo,
+        message: updates.map(u => u.message).join('\n'),
+        tree: newTree.sha,
+        parents: [ref.object.sha]
+      });
+
+      // Update branch reference
+      await this.octokit.rest.git.updateRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${this.branch}`,
+        sha: newCommit.sha
+      });
+
+      console.debug('Batch update completed successfully:', {
+        count: updates.length,
+        paths: updates.map(u => u.path),
+        commitSha: newCommit.sha
+      });
+    } catch (error) {
+      console.error('Error in batch update:', error);
+      throw error;
+    }
+  }
+
+  async updateMetadata(data: Record<string, any>, path: string): Promise<void> {
+    try {
+      const cleanPath = path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/');
+      const safePath = cleanPath.startsWith('data/entries/') ? cleanPath : `data/entries/${cleanPath}`;
+      
+      const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+      console.debug('Saving metadata:', { path: safePath, contentLength: content.length });
+
+      await this.batchUpdateFiles([
+        {
+          path: safePath,
+          content,
+          message: `Update metadata: ${safePath}`
+        }
+      ]);
+
+      console.debug('Metadata saved successfully:', { path: safePath });
+    } catch (error) {
+      console.error('Error saving metadata:', error);
+      throw error;
+    }
+  }
+
+  async uploadImagesWithMetadata(uploads: ImageUpload[]): Promise<void> {
+    try {
+      console.debug('Starting batch image upload:', { count: uploads.length });
+      
+      const batchUpdates: BatchFileUpdate[] = [];
+      
+      for (const upload of uploads) {
+        try {
+          if (upload.file instanceof File) {
+            // Handle raw File object
+            const base64Content = await this.fileToBase64(upload.file);
+            batchUpdates.push({
+              path: upload.path,
+              content: base64Content,
+              message: `Upload image: ${upload.path.split('/').pop()}`
+            });
+          } else {
+            // Handle image data object
+            const content = JSON.stringify(upload.file);
+            batchUpdates.push({
+              path: upload.path,
+              content: Buffer.from(content).toString('base64'),
+              message: `Upload image metadata: ${upload.path}`
+            });
+          }
+        } catch (error) {
+          console.error('Error preparing image upload:', error);
+          throw error;
+        }
+      }
+
+      if (batchUpdates.length > 0) {
+        await this.batchUpdateFiles(batchUpdates);
+      }
+
+      console.debug('Batch image upload completed successfully');
+    } catch (error) {
+      console.error('Error in batch image upload:', error);
       throw error;
     }
   }
