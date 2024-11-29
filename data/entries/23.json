@@ -1,0 +1,75 @@
+{
+  "id": "23",
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732857956159_00000330-PHOTO-2024-11-19-00-12-31.JPG",
+      "thumbnail": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732857956159_00000330-PHOTO-2024-11-19-00-12-31.JPG",
+      "size": 330020
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 4050681544654",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-29T05:25:58.126Z",
+    "lastModified": "2024-11-29T05:25:58.126Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "Vibrant and eclectic collage featuring nine distinct illustrations, each showcasing bold colors and imaginative themes. Elements range from surreal depictions of nature and technology to expressive human forms, all set against vibrant backgrounds.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Contemporary Pop Art",
+      "secondary": [
+        "Surrealism",
+        "Abstract"
+      ],
+      "influences": [
+        "Pop culture",
+        "Modern graphic design"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality digital artwork with sharp details",
+      "renderStyle": "Vector illustration",
+      "detailLevel": "High detail with intricate patterns and textures",
+      "lighting": "Flat and even lighting with bright highlights"
+    },
+    "colors": {
+      "palette": [
+        "#FF6F61",
+        "#3DDC97",
+        "#FFEB3B"
+      ],
+      "mood": "Playful and energetic",
+      "contrast": "High contrast between colors"
+    },
+    "tags": {
+      "style": [
+        "Pop Art",
+        "Collage",
+        "Surreal"
+      ],
+      "technical": [
+        "Digital",
+        "Vector",
+        "High Detail"
+      ],
+      "mood": [
+        "Vibrant",
+        "Energetic",
+        "Playful"
+      ]
+    }
+  }
+}
