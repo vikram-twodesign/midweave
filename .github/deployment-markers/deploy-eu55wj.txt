@@ -1,0 +1,5 @@
+{
+  "action": "resync-start",
+  "timestamp": "2024-11-29T09:00:55.711Z",
+  "deployId": "eu55wj"
+}

@@ -1,0 +1,75 @@
+{
+  "id": "26",
+  "title": "dgdhsdgjsj rgtartagrreag",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1732870529764_00000303-PHOTO-2024-11-06-21-09-55.JPG",
+      "thumbnail": "images/originals/1732870529764_00000303-PHOTO-2024-11-06-21-09-55.JPG",
+      "size": 185557
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 40506815894554",
+    "prompt": "dgdhsdgjsj rgtartagrreag",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-29T08:55:32.780Z",
+    "lastModified": "2024-11-29T08:55:32.780Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "A serene scene features a girl reading a book while sitting on a grassy hill, accompanied by two sleeping sheep. Soft, fluffy clouds and birds in the sky enhance the tranquil atmosphere.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Whimsical",
+      "secondary": [
+        "Cartoon",
+        "Flat Design"
+      ],
+      "influences": [
+        "Children's Book Illustration",
+        "Modern Graphic Design"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality illustration with smooth lines and soft textures",
+      "renderStyle": "Vector art",
+      "detailLevel": "Moderate detail, focusing on character and environment",
+      "lighting": "Soft, ambient lighting with a bright, cheerful feel"
+    },
+    "colors": {
+      "palette": [
+        "#A4D9E1",
+        "#F1F2F3",
+        "#6B8E23"
+      ],
+      "mood": "Calm and joyful",
+      "contrast": "Low contrast, creating a harmonious blend of colors"
+    },
+    "tags": {
+      "style": [
+        "whimsical",
+        "illustration",
+        "children's art"
+      ],
+      "technical": [
+        "vector",
+        "digital",
+        "high quality"
+      ],
+      "mood": [
+        "calm",
+        "joyful",
+        "peaceful"
+      ]
+    }
+  }
+}
