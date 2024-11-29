@@ -1,0 +1,75 @@
+{
+  "id": "24",
+  "title": "ytukytiuytkjhgvjvnmv",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1732869612034_00000332-PHOTO-2024-11-21-19-57-57.JPG",
+      "thumbnail": "images/originals/1732869612034_00000332-PHOTO-2024-11-21-19-57-57.JPG",
+      "size": 101873
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 40506815896465",
+    "prompt": "ytukytiuytkjhgvjvnmv",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-29T08:40:13.732Z",
+    "lastModified": "2024-11-29T08:40:13.732Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "A futuristic spacecraft hovers above a glowing Earth, showcasing intricate details in its structure and glowing lights. The contrast between the dark space and vibrant planet enhances the spacecraft's prominence.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Sci-fi",
+      "secondary": [
+        "Futuristic",
+        "Concept Art"
+      ],
+      "influences": [
+        "Science Fiction",
+        "Space Exploration"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality rendering with sharp details",
+      "renderStyle": "Digital painting",
+      "detailLevel": "Highly detailed with complex textures",
+      "lighting": "Dynamic lighting with glowing elements"
+    },
+    "colors": {
+      "palette": [
+        "#000000",
+        "#FF5733",
+        "#C70039"
+      ],
+      "mood": "Mysterious and adventurous",
+      "contrast": "High contrast between dark space and illuminated spacecraft"
+    },
+    "tags": {
+      "style": [
+        "sci-fi",
+        "futuristic",
+        "space"
+      ],
+      "technical": [
+        "high-quality",
+        "detailed",
+        "dynamic lighting"
+      ],
+      "mood": [
+        "mysterious",
+        "adventurous",
+        "exploratory"
+      ]
+    }
+  }
+}
