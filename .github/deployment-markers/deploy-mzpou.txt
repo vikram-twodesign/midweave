@@ -1,0 +1,5 @@
+{
+  "timestamp": "2024-11-28T08:20:41.040Z",
+  "action": "resync-start",
+  "deployId": "mzpou"
+}
