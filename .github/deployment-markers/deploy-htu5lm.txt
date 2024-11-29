@@ -1,0 +1,12 @@
+{
+  "action": "resync-complete",
+  "timestamp": "2024-11-29T08:16:16.854Z",
+  "stats": {
+    "stats": {
+      "validEntries": 3,
+      "validFiles": 3,
+      "totalFiles": 3
+    }
+  },
+  "deployId": "htu5lm"
+}
