@@ -1,7 +1,7 @@
 {
   "id": "22",
-  "title": "Untitled Style",
-  "description": "",
+  "title": "Urban Documentary Photorealistic",
+  "description": "A dynamic urban photograph capturing the interplay of light and shadow in a contemporary cityscape",
   "images": [
     {
       "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732634427736_00000129-PHOTO-2024-09-23-23-10-21.JPG",
@@ -10,44 +10,44 @@
     }
   ],
   "parameters": {
-    "sref": "",
-    "prompt": "",
-    "style": "",
-    "ar": "",
+    "sref": "urban_landscape",
+    "prompt": "Contemporary urban landscape with dramatic lighting",
+    "style": "urban",
+    "ar": "4:3",
     "chaos": 0,
-    "version": "",
+    "version": "v6",
     "quality": 1,
     "stylize": 100
   },
   "adminMetadata": {
     "createdAt": "2023-11-28T05:43:41.678Z",
     "lastModified": "2023-11-28T05:43:41.678Z",
-    "featured": false,
-    "curatorNotes": ""
+    "featured": true,
+    "curatorNotes": "Excellent composition with dramatic light and shadow play"
   },
   "aiAnalysis": {
-    "description": "",
-    "imageType": "generated",
+    "description": "Urban landscape photograph with dramatic lighting, showcasing the interplay of architectural elements and natural light in a contemporary setting",
+    "imageType": "urban",
     "style": {
-      "primary": "",
-      "secondary": [],
-      "influences": []
+      "primary": "Urban Photography",
+      "secondary": ["Contemporary", "Documentary", "Architectural"],
+      "influences": ["Street Photography", "Modern Architecture", "Urban Design"]
     },
     "technical": {
-      "quality": "",
-      "renderStyle": "",
-      "detailLevel": "",
-      "lighting": ""
+      "quality": "High Resolution",
+      "renderStyle": "Photorealistic",
+      "detailLevel": "Very Detailed",
+      "lighting": "Dramatic Natural Light"
     },
     "colors": {
-      "palette": [],
-      "mood": "",
-      "contrast": ""
+      "palette": ["#1A1A1A", "#F5F5F5", "#4A4A4A", "#B8B8B8"],
+      "mood": "Dramatic and Contemporary",
+      "contrast": "High"
     },
     "tags": {
-      "style": [],
-      "technical": [],
-      "mood": []
+      "style": ["Urban", "Contemporary", "Documentary", "Architectural"],
+      "technical": ["High Resolution", "Natural Light", "High Contrast", "Sharp Detail"],
+      "mood": ["Dramatic", "Modern", "Dynamic", "Professional"]
     }
   }
 } 

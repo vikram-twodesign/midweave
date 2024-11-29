@@ -49,6 +49,7 @@ type FormPath =
   | 'aiAnalysis.imageType';
 
 interface FormValues {
+  title?: string;
   sref: string;
   prompt?: string;
   style?: string;
@@ -62,6 +63,18 @@ interface FormValues {
   stylize?: number;
   aiAnalysis?: AIAnalysis;
 }
+
+// Add this helper function at the top with other utility functions
+const generateConciseTitle = (analysis: AIAnalysis): string => {
+  // Extract key elements from AI analysis
+  const style = analysis.style.primary.split(' ')[0];
+  const mainTag = analysis.tags.style[0];
+  const technical = analysis.technical.renderStyle.split(' ')[0];
+  
+  // Combine elements, ensuring no more than 3 words
+  const elements = [style, mainTag, technical].filter(Boolean);
+  return elements.slice(0, 3).join(' ');
+};
 
 export function UploadForm() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -186,56 +199,46 @@ export function UploadForm() {
       toast({
         title: "No images selected",
         description: "Please select at least one image to analyze"
-      })
-      return
+      });
+      return;
     }
 
-    setIsAnalyzing(true)
-    setShowAIDialog(true)
+    setIsAnalyzing(true);
+    setShowAIDialog(true);
 
     try {
-      const analysisResults: Record<number, AIAnalysis> = {}
+      const newAnalysis: Record<number, AIAnalysis> = {};
       
-      // Analyze each image
       for (let i = 0; i < selectedFiles.length; i++) {
-        try {
-          const analysis = await analyzeImage(selectedFiles[i])
-          analysisResults[i] = analysis
-        } catch (error) {
-          console.error(`Error analyzing image ${i}:`, error)
-          toast({
-            title: `Error analyzing image ${i + 1}`,
-            description: "Failed to analyze image. Please try again.",
-            variant: "destructive"
-          })
+        const analysis = await analyzeImage(selectedFiles[i]);
+        if (analysis) {
+          newAnalysis[i] = analysis;
+          // Auto-generate title and set form values
+          const generatedTitle = generateConciseTitle(analysis);
+          setValue('title', generatedTitle);
+          setValue('aiAnalysis', analysis);
         }
       }
-
-      setAiAnalysis(analysisResults)
       
-      // Set the form values with the first image's analysis
-      if (analysisResults[0]) {
-        setValue('aiAnalysis', analysisResults[0])
-      }
+      setAiAnalysis(newAnalysis);
       
       toast({
-        title: "Analysis Complete",
+        title: "Success",
         description: "AI analysis has been completed successfully!"
-      })
-
-      // Automatically close the dialog after analysis is complete
-      setShowAIDialog(false)
+      });
+      setShowAIDialog(false);
     } catch (error) {
-      console.error('AI Analysis error:', error)
+      console.error('AI Analysis error:', error);
       toast({
-        title: "Analysis Failed",
-        description: "Failed to complete AI analysis. Please try again.",
+        title: "Error",
+        description: "Failed to analyze image",
         variant: "destructive"
-      })
+      });
+      setShowAIDialog(false);
     } finally {
-      setIsAnalyzing(false)
+      setIsAnalyzing(false);
     }
-  }
+  };
 
   const onSubmit = async (data: FormValues) => {
     if (selectedFiles.length === 0) {

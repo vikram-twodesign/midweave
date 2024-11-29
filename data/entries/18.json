@@ -1,7 +1,7 @@
 {
   "id": "18",
-  "title": "Untitled Style",
-  "description": "",
+  "title": "Modern Geometric Photorealistic",
+  "description": "A detailed architectural photograph showcasing modern design elements with strong geometric patterns and clean lines",
   "images": [
     {
       "url": "https://raw.githubusercontent.com/vikram-twodesign/midweave/main/images/originals/1732606599789_00000319-PHOTO-2024-11-16-09-16-23.JPG",
@@ -10,44 +10,44 @@
     }
   ],
   "parameters": {
-    "sref": "",
-    "prompt": "",
-    "style": "",
-    "ar": "",
+    "sref": "architectural_detail",
+    "prompt": "Modern architectural detail with geometric patterns",
+    "style": "architectural",
+    "ar": "4:3",
     "chaos": 0,
-    "version": "",
+    "version": "v6",
     "quality": 1,
     "stylize": 100
   },
   "adminMetadata": {
     "createdAt": "2023-11-28T05:43:41.678Z",
     "lastModified": "2023-11-28T05:43:41.678Z",
-    "featured": false,
-    "curatorNotes": ""
+    "featured": true,
+    "curatorNotes": "Strong composition with excellent detail preservation"
   },
   "aiAnalysis": {
-    "description": "",
-    "imageType": "generated",
+    "description": "High-contrast architectural photograph featuring modern design elements, geometric patterns, and precise structural details",
+    "imageType": "architectural",
     "style": {
-      "primary": "",
-      "secondary": [],
-      "influences": []
+      "primary": "Modern Architectural",
+      "secondary": ["Minimalist", "Geometric", "Contemporary"],
+      "influences": ["Bauhaus", "Modern Architecture", "Industrial Design"]
     },
     "technical": {
-      "quality": "",
-      "renderStyle": "",
-      "detailLevel": "",
-      "lighting": ""
+      "quality": "High Resolution",
+      "renderStyle": "Photorealistic",
+      "detailLevel": "Very Detailed",
+      "lighting": "High Contrast Natural Light"
     },
     "colors": {
-      "palette": [],
-      "mood": "",
-      "contrast": ""
+      "palette": ["#2B2B2B", "#FFFFFF", "#808080", "#D3D3D3"],
+      "mood": "Professional and Modern",
+      "contrast": "High"
     },
     "tags": {
-      "style": [],
-      "technical": [],
-      "mood": []
+      "style": ["Modern", "Architectural", "Minimalist", "Geometric"],
+      "technical": ["High Resolution", "Sharp Focus", "High Contrast", "Detailed"],
+      "mood": ["Professional", "Clean", "Contemporary", "Sophisticated"]
     }
   }
 } 

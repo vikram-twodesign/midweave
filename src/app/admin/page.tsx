@@ -11,6 +11,52 @@ import { useAuth } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
 import { LogOut, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+
+function URLUploadForm() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="tweet-url">Tweet URL</Label>
+          <div className="flex gap-2">
+            <Input 
+              id="tweet-url" 
+              placeholder="Paste a Twitter/X post URL containing Midjourney images and parameters" 
+              className="flex-1"
+            />
+            <Button>
+              <Loader2 className="mr-2 h-4 w-4" />
+              Import
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            The app will automatically extract images and Midjourney parameters from the tweet content.
+          </p>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Import Preview</CardTitle>
+            <CardDescription>
+              Preview extracted content before importing
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center h-[300px] border-2 border-dashed rounded-lg">
+              <div className="text-center">
+                <p className="text-muted-foreground">
+                  Paste a URL above to preview content
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
 
 export default function AdminPage() {
   const { isAuthenticated, isLoading, logout } = useAuth()
@@ -85,6 +131,20 @@ export default function AdminPage() {
                 </CardHeader>
                 <CardContent>
                   <UploadForm />
+                </CardContent>
+              </Card>
+            )}
+
+            {activeTab === "url-upload" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Upload from URL</CardTitle>
+                  <CardDescription>
+                    Import images and parameters from Twitter/X posts
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <URLUploadForm />
                 </CardContent>
               </Card>
             )}

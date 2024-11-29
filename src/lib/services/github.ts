@@ -128,7 +128,7 @@ export class GitHubService {
       // Type guard to ensure we have a file with content
       if (response.data.type === 'file' && response.data.content) {
         return {
-          content: response.data.content,
+          content: Base64.decode(response.data.content),
           sha: response.data.sha
         };
       }
@@ -142,13 +142,12 @@ export class GitHubService {
     }
   }
 
-  async listFiles(path: string): Promise<Array<{ name: string }>> {
+  async listFiles(path: string): Promise<Array<{ name: string; path: string; type: string }>> {
     if (!this.octokit) {
       throw new Error('GitHub service is not properly configured.');
     }
 
     try {
-      console.log(`Listing files in ${path}...`);
       const response = await this.octokit.rest.repos.getContent({
         owner: this.owner,
         repo: this.repo,
@@ -157,26 +156,14 @@ export class GitHubService {
       });
 
       if (!Array.isArray(response.data)) {
-        console.error('Invalid response format - expected array:', response.data);
-        throw new Error('Invalid response format');
+        throw new Error('Expected directory content');
       }
 
-      console.log(`Found ${response.data.length} files in ${path}:`, 
-        response.data.map(file => file.name));
-
-      return response.data
-        .filter((file): file is GitHubFileContent => 
-          file.type === 'file' && 
-          typeof file.name === 'string'
-        )
-        .filter(file => file.name.endsWith('.json'))
-        .map(file => ({ name: file.name }));
+      return response.data;
     } catch (error) {
       if (error instanceof RequestError && error.status === 404) {
-        console.log(`No files found in ${path}`);
-        return []; // Return empty array if directory doesn't exist yet
+        return [];
       }
-      console.error(`Error listing files in ${path}:`, error);
       throw error;
     }
   }
@@ -465,6 +452,123 @@ export class GitHubService {
     }
   }
 
+  async deleteEntry(id: string): Promise<void> {
+    try {
+      console.log('Starting entry deletion process:', { id });
+      
+      // Get the entry first to get all associated files
+      const entry = await this.getEntry(id);
+      if (!entry) {
+        console.log(`Entry ${id} not found in GitHub, creating deletion marker`);
+        await this.createDeletionMarker(id);
+        return;
+      }
+
+      console.log('Found entry to delete:', { 
+        id, 
+        imageCount: entry.images.length,
+        images: entry.images.map(img => img.url)
+      });
+
+      // Delete all associated images first
+      for (const img of entry.images) {
+        const url = new URL(img.url);
+        const filename = url.pathname.split('/').pop();
+        if (!filename) {
+          console.warn(`Invalid image URL: ${img.url}`);
+          continue;
+        }
+        
+        const imagePath = `images/originals/${filename}`;
+        console.log('Deleting image:', { imagePath });
+        
+        try {
+          await this.deleteFile(imagePath);
+          console.log('Image deleted successfully:', { imagePath });
+        } catch (error) {
+          if (error instanceof RequestError && error.status === 404) {
+            console.log(`Image ${imagePath} already deleted or not found`);
+            continue;
+          }
+          throw error;
+        }
+      }
+
+      // Delete the metadata file
+      const metadataPath = `data/entries/${id}.json`;
+      console.log('Deleting metadata file:', { metadataPath });
+      
+      try {
+        await this.deleteFile(metadataPath);
+        console.log('Metadata file deleted successfully:', { metadataPath });
+      } catch (error) {
+        if (error instanceof RequestError && error.status === 404) {
+          console.log(`Metadata file ${metadataPath} already deleted or not found`);
+        } else {
+          throw error;
+        }
+      }
+
+      console.log('Entry deletion completed successfully:', { id });
+    } catch (error) {
+      console.error('Error deleting entry:', error);
+      throw error;
+    }
+  }
+
+  private async createEmptyCommit(message: string): Promise<void> {
+    try {
+      const timestamp = new Date().toISOString();
+      const markerPath = '.github/deployment-markers/marker-' + timestamp.replace(/[:.]/g, '-') + '.txt';
+      
+      // Create a unique marker file for each deployment
+      await this.octokit.rest.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path: markerPath,
+        message: `${message} [${timestamp}]`,
+        content: Buffer.from(`Deployment trigger: ${timestamp}\nAction: ${message}`).toString('base64'),
+        branch: this.branch
+      });
+
+      console.log('Created deployment marker:', { markerPath, message });
+    } catch (error) {
+      console.error('Error creating deployment marker:', error);
+      // Don't throw error as this is just a helper function
+    }
+  }
+
+  private async createDeletionMarker(id: string): Promise<void> {
+    try {
+      const markerPath = `data/entries/.deleted-${id}`;
+      const timestamp = new Date().toISOString();
+      
+      await this.octokit.rest.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path: markerPath,
+        message: `Mark entry ${id} as deleted`,
+        content: Buffer.from(timestamp).toString('base64'),
+        branch: this.branch
+      });
+    } catch (error) {
+      console.error('Error creating deletion marker:', error);
+      // Don't throw error as this is just a helper function
+    }
+  }
+
+  private async getFileSha(path: string): Promise<string | undefined> {
+    try {
+      const { sha } = await this.getFileContent(path);
+      return sha;
+    } catch (error) {
+      if (error instanceof RequestError && error.status === 404) {
+        return undefined;
+      }
+      throw error;
+    }
+  }
+
   async deleteFile(path: string): Promise<void> {
     try {
       console.log('Attempting to delete file:', { path });
@@ -473,8 +577,9 @@ export class GitHubService {
       const { sha } = await this.getFileContent(path);
       
       if (!sha) {
-        console.warn(`File ${path} not found (no SHA), skipping deletion`);
-        return;
+        const error = new Error(`File ${path} not found (no SHA)`);
+        error.name = 'FileNotFoundError';
+        throw error;
       }
 
       await this.octokit.rest.repos.deleteFile({
@@ -489,67 +594,220 @@ export class GitHubService {
       console.log('File deleted successfully:', { path });
     } catch (error) {
       if (error instanceof RequestError && error.status === 404) {
-        console.warn(`File ${path} not found, skipping deletion`);
-        return;
+        const notFoundError = new Error(`File ${path} not found`);
+        notFoundError.name = 'FileNotFoundError';
+        throw notFoundError;
       }
-      console.error('Error deleting file:', error);
       throw error;
     }
   }
 
-  async deleteEntry(id: string): Promise<void> {
+  async batchDeleteEntries(ids: string[]): Promise<void> {
     try {
-      console.log('Starting entry deletion process:', { id });
+      console.log('Starting batch deletion:', { ids });
       
-      // Get the entry first to get all associated files
-      const entry = await this.getEntry(id);
-      if (!entry) {
-        console.warn(`Entry ${id} not found, skipping deletion`);
-        return;
-      }
+      // Create a single deployment marker for the batch
+      const timestamp = new Date().toISOString();
+      const batchId = Math.random().toString(36).substring(7);
+      await this.createEmptyCommit(`Batch delete entries [${batchId}]`);
 
-      console.log('Found entry to delete:', { 
-        id, 
-        imageCount: entry.images.length,
-        images: entry.images.map(img => img.url)
-      });
-
-      // Delete all associated images first
-      for (const img of entry.images) {
+      // Process deletions sequentially to avoid conflicts
+      for (const id of ids) {
         try {
-          // Extract just the filename from the URL
-          const url = new URL(img.url);
-          const filename = url.pathname.split('/').pop();
-          if (!filename) {
-            console.warn(`Invalid image URL: ${img.url}`);
-            continue;
-          }
-          
-          const imagePath = `images/originals/${filename}`;
-          console.log('Deleting image:', { imagePath });
-          await this.deleteFile(imagePath);
-          console.log('Image deleted successfully:', { imagePath });
+          await this.deleteEntry(id);
         } catch (error) {
-          console.error(`Error deleting image ${img.url}:`, error);
-          // Continue with other deletions even if one fails
+          console.error(`Error deleting entry ${id}:`, error);
+          // Continue with other deletions
         }
       }
 
-      // Delete the metadata file
-      const metadataPath = `data/entries/${id}.json`;
-      console.log('Deleting metadata file:', { metadataPath });
-      
-      try {
-        await this.deleteFile(metadataPath);
-        console.log('Metadata file deleted successfully:', { metadataPath });
-      } catch (error) {
-        console.error(`Error deleting metadata file ${metadataPath}:`, error);
-        throw error; // Rethrow as metadata deletion is critical
+      // Create a completion marker
+      const completionPath = `.github/deployment-markers/batch-${batchId}-complete.txt`;
+      await this.octokit.rest.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path: completionPath,
+        message: `Complete batch deletion [${batchId}]`,
+        content: Buffer.from(`Batch deletion complete: ${timestamp}\nDeleted IDs: ${ids.join(', ')}`).toString('base64'),
+        branch: this.branch
+      });
+
+      console.log('Batch deletion completed:', { batchId, ids });
+    } catch (error) {
+      console.error('Error in batch deletion:', error);
+      throw error;
+    }
+  }
+
+  async getAllEntries(): Promise<Entry[]> {
+    if (!this.octokit) {
+      throw new Error('GitHub service is not properly configured.');
+    }
+
+    try {
+      const entries: Entry[] = [];
+      const files = await this.listFiles('data/entries');
+
+      for (const file of files) {
+        if (file.type === 'file' && file.name.endsWith('.json')) {
+          try {
+            const { content } = await this.getFileContent(file.path);
+            const entry = JSON.parse(content) as Entry;
+            
+            // Process images to ensure URLs are correct
+            if (Array.isArray(entry.images)) {
+              entry.images = entry.images.map(image => ({
+                ...image,
+                url: this.getFullUrl(image.url),
+                thumbnail: image.thumbnail ? this.getFullUrl(image.thumbnail) : this.getFullUrl(image.url)
+              }));
+            }
+
+            entries.push(entry);
+          } catch (error) {
+            console.error(`Error reading entry file ${file.name}:`, error);
+          }
+        }
       }
 
-      console.log('Entry deletion completed successfully:', { id });
+      return entries;
     } catch (error) {
-      console.error('Error deleting entry:', error);
+      if (error instanceof RequestError && error.status === 404) {
+        return [];
+      }
+      throw error;
+    }
+  }
+
+  private async triggerDeployment(action: string, details: Record<string, unknown> = {}): Promise<void> {
+    try {
+      const timestamp = new Date().toISOString();
+      const deployId = Math.random().toString(36).substring(7);
+      const markerPath = `.github/deployment-markers/deploy-${deployId}.txt`;
+      
+      await this.octokit.rest.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path: markerPath,
+        message: `Deployment trigger: ${action} [${deployId}]`,
+        content: Buffer.from(
+          JSON.stringify({
+            timestamp,
+            action,
+            deployId,
+            ...details
+          }, null, 2)
+        ).toString('base64'),
+        branch: this.branch
+      });
+
+      console.log('Deployment triggered:', { action, deployId });
+    } catch (error) {
+      console.error('Error triggering deployment:', error);
+      // Don't throw error as this is a helper function
+    }
+  }
+
+  async resyncLibrary(): Promise<Entry[]> {
+    try {
+      console.log('Starting library resync...');
+      
+      // Create a resync marker to trigger deployment
+      await this.triggerDeployment('resync-start');
+      
+      // First, get all entries from GitHub
+      const allEntries = await this.getAllEntries();
+      console.log('Fetched entries from GitHub:', { count: allEntries.length });
+
+      // Create a map of valid entries and their files
+      const validEntries = new Map<string, Entry>();
+      const validFiles = new Set<string>();
+
+      // Validate each entry and its files
+      for (const entry of allEntries) {
+        try {
+          // Check if all referenced images exist
+          let isValid = true;
+          for (const img of entry.images) {
+            const url = new URL(img.url);
+            const filename = url.pathname.split('/').pop();
+            if (!filename) continue;
+            
+            const imagePath = `images/originals/${filename}`;
+            try {
+              const exists = await this.fileExists(imagePath);
+              if (exists) {
+                validFiles.add(imagePath);
+              } else {
+                isValid = false;
+                console.warn(`Image file missing for entry ${entry.id}:`, imagePath);
+              }
+            } catch (error) {
+              console.error(`Error checking image ${imagePath}:`, error);
+              isValid = false;
+            }
+          }
+
+          if (isValid) {
+            validEntries.set(entry.id, entry);
+          }
+        } catch (error) {
+          console.error(`Error validating entry ${entry.id}:`, error);
+        }
+      }
+
+      // Get all files in the images directory
+      const imageFiles = await this.listFiles('images/originals');
+      const imagePaths = imageFiles.map(f => f.path);
+      console.log('Found image files:', { count: imagePaths.length });
+
+      // Delete orphaned files (files not referenced by any valid entry)
+      for (const filePath of imagePaths) {
+        if (!validFiles.has(filePath)) {
+          console.log('Deleting orphaned file:', filePath);
+          try {
+            await this.deleteFile(filePath);
+          } catch (error) {
+            console.error(`Error deleting orphaned file ${filePath}:`, error);
+          }
+        }
+      }
+
+      // Create resync completion marker
+      await this.triggerDeployment('resync-complete', {
+        stats: {
+          validEntries: validEntries.size,
+          validFiles: validFiles.size,
+          totalFiles: imagePaths.length
+        }
+      });
+
+      console.log('Library resync completed:', {
+        validEntries: validEntries.size,
+        validFiles: validFiles.size,
+        totalFiles: imagePaths.length
+      });
+
+      return Array.from(validEntries.values());
+    } catch (error) {
+      console.error('Error during library resync:', error);
+      throw error;
+    }
+  }
+
+  private async fileExists(path: string): Promise<boolean> {
+    try {
+      await this.octokit.rest.repos.getContent({
+        owner: this.owner,
+        repo: this.repo,
+        path,
+        ref: this.branch
+      });
+      return true;
+    } catch (error) {
+      if (error instanceof RequestError && error.status === 404) {
+        return false;
+      }
       throw error;
     }
   }
