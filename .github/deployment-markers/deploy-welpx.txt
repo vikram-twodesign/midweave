@@ -1,0 +1,5 @@
+{
+  "timestamp": "2024-11-29T05:36:57.308Z",
+  "action": "resync-start",
+  "deployId": "welpx"
+}
