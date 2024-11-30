@@ -1,0 +1,5 @@
+{
+  "action": "resync-start",
+  "timestamp": "2024-11-30T07:16:01.447Z",
+  "deployId": "vmy217"
+}
