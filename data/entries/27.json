@@ -1,0 +1,75 @@
+{
+  "id": "27",
+  "title": "fghjdtstjs a tsetusetuseh ",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1732951153359_00000212-PHOTO-2024-10-08-07-55-19.JPG",
+      "thumbnail": "images/originals/1732951153359_00000212-PHOTO-2024-10-08-07-55-19.JPG",
+      "size": 179509
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 4050681589233442",
+    "prompt": "fghjdtstjs a tsetusetuseh ",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-30T07:19:17.310Z",
+    "lastModified": "2024-11-30T07:19:17.310Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "Four-panel illustration featuring a surreal space theme, showcasing a floating Nike logo, a sleek rocket, a UFO beaming light, and an astronaut on a swing in space. Each panel utilizes a cohesive blue color palette against a dark starry background.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Modern graphic art",
+      "secondary": [
+        "vector art",
+        "flat design"
+      ],
+      "influences": [
+        "sci-fi aesthetics",
+        "commercial branding"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality, clean lines with smooth gradients",
+      "renderStyle": "Digital vector rendering",
+      "detailLevel": "Moderate detail with emphasis on shape and color",
+      "lighting": "Subtle lighting effects with a focus on contrast between elements"
+    },
+    "colors": {
+      "palette": [
+        "#001F3F",
+        "#0074D9",
+        "#7FDBFF"
+      ],
+      "mood": "Calm and whimsical with a futuristic vibe",
+      "contrast": "High contrast between dark background and light elements"
+    },
+    "tags": {
+      "style": [
+        "graphic design",
+        "sci-fi",
+        "minimalist"
+      ],
+      "technical": [
+        "vector",
+        "digital illustration",
+        "high resolution"
+      ],
+      "mood": [
+        "whimsical",
+        "futuristic",
+        "playful"
+      ]
+    }
+  }
+}
