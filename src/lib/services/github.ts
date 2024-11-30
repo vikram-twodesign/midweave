@@ -354,27 +354,27 @@ export class GitHubService {
   }
 
   async listEntries(): Promise<Entry[]> {
-    const entries: Entry[] = [];
+    this.ensureInitialized();
+
     try {
       const files = await this.listFiles('data/entries');
-      
-      const entryPromises = files.map(async (file) => {
-        try {
-          const entryId = file.name.replace('.json', '');
-          const entry = await this.getEntry(entryId);
-          if (entry && Array.isArray(entry.images) && entry.images.length > 0) {
-            entries.push(entry);
-          }
-        } catch (error) {
-          console.error(`Error processing entry ${file.name}:`, error);
-        }
-      });
+      const jsonFiles = files.filter(file => 
+        file.name.endsWith('.json') && 
+        !file.name.startsWith('.') && 
+        !file.name.includes('deleted')
+      );
 
-      await Promise.all(entryPromises);
-      return entries;
+      const entries = await Promise.all(
+        jsonFiles.map(async file => {
+          const id = file.name.replace('.json', '');
+          return await this.getEntry(id);
+        })
+      );
+
+      return entries.filter((entry): entry is Entry => entry !== null);
     } catch (error) {
       console.error('Error listing entries:', error);
-      return entries;
+      return [];
     }
   }
 
@@ -686,25 +686,47 @@ export class GitHubService {
     }
   }
 
-  private async triggerDeployment(action: string, stats?: Record<string, any>): Promise<void> {
+  private async triggerDeployment(action: string, content: Record<string, any> = {}): Promise<void> {
+    if (this.syncInProgress) {
+      console.debug('Sync in progress, skipping deployment trigger');
+      return;
+    }
+
     try {
+      const timestamp = Date.now();
       const deployId = Math.random().toString(36).substring(2, 8);
-      const timestamp = new Date().toISOString();
-      const markerPath = `.github/deployment-markers/deploy-${deployId}.txt`;
-      const content = {
-        action,
-        timestamp,
-        stats,
-        deployId
-      };
+      const markerPath = `data/.deployment/${timestamp}-${deployId}.json`;
 
       try {
+        // Check for recent deployment markers
+        const { data: deployments } = await this.octokit.rest.repos.getContent({
+          owner: this.owner,
+          repo: this.repo,
+          path: 'data/.deployment',
+          ref: this.branch
+        });
+
+        if (Array.isArray(deployments)) {
+          const recentMarkers = deployments
+            .filter(d => d.type === 'file' && d.name.endsWith('.json'))
+            .map(d => ({
+              name: d.name,
+              timestamp: parseInt(d.name.split('-')[0], 10)
+            }))
+            .filter(d => !isNaN(d.timestamp) && Date.now() - d.timestamp < 60000); // Last minute
+
+          if (recentMarkers.length > 0) {
+            console.debug('Recent deployment found, skipping:', recentMarkers[0]);
+            return;
+          }
+        }
+
         await this.octokit.rest.repos.createOrUpdateFileContents({
           owner: this.owner,
           repo: this.repo,
           path: markerPath,
           message: `Deployment trigger: ${action} [${timestamp}]`,
-          content: Buffer.from(JSON.stringify(content, null, 2)).toString('base64'),
+          content: Buffer.from(JSON.stringify({ ...content, action, deployId, timestamp }, null, 2)).toString('base64'),
           branch: this.branch
         });
         console.log('Deployment triggered:', { action, deployId });
@@ -732,11 +754,15 @@ export class GitHubService {
       
       await this.triggerDeployment('resync-start');
       
+      // First get all image files that actually exist
+      const imageFiles = await this.listFiles('images/originals');
+      const validImagePaths = new Set(imageFiles.map(f => f.path));
+      console.debug('Found image files:', { count: validImagePaths.size });
+
       const allEntries = await this.getAllEntries();
       console.debug('Fetched entries from GitHub:', { count: allEntries.length });
 
       const validEntries = new Map<string, Entry>();
-      const validFiles = new Set<string>();
 
       for (const entry of allEntries) {
         try {
@@ -747,17 +773,10 @@ export class GitHubService {
             if (!filename) continue;
             
             const imagePath = `images/originals/${filename}`;
-            try {
-              const exists = await this.fileExists(imagePath);
-              if (exists) {
-                validFiles.add(imagePath);
-              } else {
-                isValid = false;
-                console.warn(`Image file missing for entry ${entry.id}:`, imagePath);
-              }
-            } catch (error) {
-              console.warn(`Error checking image ${imagePath}:`, error);
+            if (!validImagePaths.has(imagePath)) {
               isValid = false;
+              console.warn(`Image file missing for entry ${entry.id}:`, imagePath);
+              break;
             }
           }
 
@@ -769,22 +788,18 @@ export class GitHubService {
         }
       }
 
-      const imageFiles = await this.listFiles('images/originals');
-      const imagePaths = imageFiles.map(f => f.path);
-      console.debug('Found image files:', { count: imagePaths.length });
-
       await this.triggerDeployment('resync-complete', {
         stats: {
           validEntries: validEntries.size,
-          validFiles: validFiles.size,
-          totalFiles: imagePaths.length
+          validFiles: validImagePaths.size,
+          totalFiles: imageFiles.length
         }
       });
 
       console.debug('Library resync completed:', {
         validEntries: validEntries.size,
-        validFiles: validFiles.size,
-        totalFiles: imagePaths.length
+        validFiles: validImagePaths.size,
+        totalFiles: imageFiles.length
       });
 
       return Array.from(validEntries.values());
@@ -817,73 +832,92 @@ export class GitHubService {
     this.ensureInitialized();
 
     try {
-      // Get current tree
-      const { data: ref } = await this.octokit.rest.git.getRef({
-        owner: this.owner,
-        repo: this.repo,
-        ref: `heads/${this.branch}`
-      });
+      let retryCount = 0;
+      const maxRetries = 3;
 
-      const { data: commit } = await this.octokit.rest.git.getCommit({
-        owner: this.owner,
-        repo: this.repo,
-        commit_sha: ref.object.sha
-      });
-
-      const { data: baseTree } = await this.octokit.rest.git.getTree({
-        owner: this.owner,
-        repo: this.repo,
-        tree_sha: commit.tree.sha
-      });
-
-      // Create blobs for each file
-      const blobs = await Promise.all(
-        updates.map(async (update) => {
-          const { data } = await this.octokit.rest.git.createBlob({
+      while (retryCount < maxRetries) {
+        try {
+          // Get current tree
+          const { data: ref } = await this.octokit.rest.git.getRef({
             owner: this.owner,
             repo: this.repo,
-            content: update.content,
-            encoding: 'base64'
+            ref: `heads/${this.branch}`
           });
-          return {
-            path: update.path,
-            mode: '100644' as const,
-            type: 'blob' as const,
-            sha: data.sha
-          };
-        })
-      );
 
-      // Create new tree
-      const { data: newTree } = await this.octokit.rest.git.createTree({
-        owner: this.owner,
-        repo: this.repo,
-        base_tree: baseTree.sha,
-        tree: blobs
-      });
+          const { data: commit } = await this.octokit.rest.git.getCommit({
+            owner: this.owner,
+            repo: this.repo,
+            commit_sha: ref.object.sha
+          });
 
-      // Create commit
-      const { data: newCommit } = await this.octokit.rest.git.createCommit({
-        owner: this.owner,
-        repo: this.repo,
-        message: updates.map(u => u.message).join('\n'),
-        tree: newTree.sha,
-        parents: [ref.object.sha]
-      });
+          const { data: baseTree } = await this.octokit.rest.git.getTree({
+            owner: this.owner,
+            repo: this.repo,
+            tree_sha: commit.tree.sha
+          });
 
-      // Update branch reference
-      await this.octokit.rest.git.updateRef({
-        owner: this.owner,
-        repo: this.repo,
-        ref: `heads/${this.branch}`,
-        sha: newCommit.sha
-      });
+          // Create blobs for each file
+          const blobs = await Promise.all(
+            updates.map(async (update) => {
+              const { data } = await this.octokit.rest.git.createBlob({
+                owner: this.owner,
+                repo: this.repo,
+                content: update.content,
+                encoding: 'base64'
+              });
+              return {
+                path: update.path,
+                mode: '100644' as const,
+                type: 'blob' as const,
+                sha: data.sha
+              };
+            })
+          );
 
-      console.debug('Batch update completed successfully:', {
-        count: updates.length,
-        paths: updates.map(u => u.path),
-        commitSha: newCommit.sha
-      });
+          // Create new tree
+          const { data: newTree } = await this.octokit.rest.git.createTree({
+            owner: this.owner,
+            repo: this.repo,
+            base_tree: baseTree.sha,
+            tree: blobs
+          });
+
+          // Create commit
+          const { data: newCommit } = await this.octokit.rest.git.createCommit({
+            owner: this.owner,
+            repo: this.repo,
+            message: updates.map(u => u.message).join('\n'),
+            tree: newTree.sha,
+            parents: [ref.object.sha]
+          });
+
+          // Update branch reference with force flag
+          await this.octokit.rest.git.updateRef({
+            owner: this.owner,
+            repo: this.repo,
+            ref: `heads/${this.branch}`,
+            sha: newCommit.sha,
+            force: true // Add force flag to handle non-fast-forward updates
+          });
+
+          console.debug('Batch update completed successfully:', {
+            count: updates.length,
+            paths: updates.map(u => u.path),
+            commitSha: newCommit.sha
+          });
+
+          // If successful, break out of retry loop
+          break;
+
+        } catch (error) {
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            throw error;
+          }
+          console.warn(`Retry ${retryCount}/${maxRetries} due to concurrent update:`, error);
+          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount)); // Exponential backoff
+        }
+      }
     } catch (error) {
       console.error('Error in batch update:', error);
       throw error;
@@ -951,6 +985,73 @@ export class GitHubService {
       console.debug('Batch image upload completed successfully');
     } catch (error) {
       console.error('Error in batch image upload:', error);
+      throw error;
+    }
+  }
+
+  async createEntry(entry: Entry, imageFile: File): Promise<void> {
+    this.ensureInitialized();
+
+    try {
+      // Prepare both the image and data files
+      const imageBuffer = await imageFile.arrayBuffer();
+      const imageContent = Buffer.from(imageBuffer).toString('base64');
+      const imagePath = `images/originals/${entry.images[0].url.split('/').pop()}`;
+      
+      const entryContent = JSON.stringify(entry, null, 2);
+      const entryPath = `data/entries/${entry.id}.json`;
+
+      // Create a tree with both files
+      const tree = [
+        {
+          path: imagePath,
+          mode: '100644' as const,
+          type: 'blob' as const,
+          content: imageContent
+        },
+        {
+          path: entryPath,
+          mode: '100644' as const,
+          type: 'blob' as const,
+          content: entryContent
+        }
+      ];
+
+      // Get the latest commit SHA
+      const latestCommit = await this.octokit.rest.repos.getBranch({
+        owner: this.owner,
+        repo: this.repo,
+        branch: this.branch,
+      });
+      const latestTreeSha = latestCommit.data.commit.commit.tree.sha;
+
+      // Create a new tree with both files
+      const newTree = await this.octokit.rest.git.createTree({
+        owner: this.owner,
+        repo: this.repo,
+        base_tree: latestTreeSha,
+        tree: tree
+      });
+
+      // Create a commit with the new tree
+      const newCommit = await this.octokit.rest.git.createCommit({
+        owner: this.owner,
+        repo: this.repo,
+        message: `Add entry ${entry.id} with image`,
+        tree: newTree.data.sha,
+        parents: [latestCommit.data.commit.sha]
+      });
+
+      // Update the branch reference
+      await this.octokit.rest.git.updateRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${this.branch}`,
+        sha: newCommit.data.sha
+      });
+
+    } catch (error) {
+      console.error('Error creating entry:', error);
       throw error;
     }
   }

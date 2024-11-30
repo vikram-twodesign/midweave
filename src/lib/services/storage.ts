@@ -174,7 +174,7 @@ const validateGitHubEntry = (entry: unknown): entry is SchemaImageEntry => {
 };
 
 // Helper function to convert GitHub entry to schema entry
-const convertGitHubEntryToSchema = (entry: any): ImageEntryWithAnalysis => {
+export const convertGitHubEntryToSchema = (entry: any): ImageEntryWithAnalysis => {
   // Create default AI analysis if none exists
   const defaultAIAnalysis: AIAnalysis = {
     description: entry.description || '',

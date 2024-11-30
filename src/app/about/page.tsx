@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import { routes } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { ImageSlideshow } from "@/components/gallery/image-slideshow"
-import { getAllEntries } from "@/lib/services/storage"
+import { getAllEntries, resyncLibrary } from "@/lib/services/storage"
 import type { ImageEntryWithAnalysis } from "@/lib/types/schema"
 import { Github, Twitter } from "lucide-react"
 
@@ -19,8 +19,27 @@ export default function AboutPage() {
   useEffect(() => {
     const loadEntries = async () => {
       try {
-        const data = await getAllEntries()
-        setEntries(data)
+        // First try to get entries from local database
+        const localEntries = await getAllEntries()
+        
+        // If no entries in local database, force a resync with GitHub
+        if (localEntries.length === 0) {
+          await resyncLibrary()
+          const syncedEntries = await getAllEntries()
+          setEntries(syncedEntries)
+        } else {
+          setEntries(localEntries)
+          // Only trigger background sync if it's been more than 5 minutes since last sync
+          const lastSync = localStorage.getItem('lastSync')
+          const now = Date.now()
+          if (!lastSync || now - parseInt(lastSync) > 5 * 60 * 1000) {
+            resyncLibrary().then(async () => {
+              const freshEntries = await getAllEntries()
+              setEntries(freshEntries)
+              localStorage.setItem('lastSync', now.toString())
+            }).catch(console.warn) // Use warn instead of error for non-critical background sync
+          }
+        }
       } catch (error) {
         console.error('Error loading entries:', error)
       }
