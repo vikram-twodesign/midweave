@@ -18,10 +18,10 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment, but queue subsequent ones
+# Allow concurrent deployments
 concurrency:
-  group: "pages"
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   build:

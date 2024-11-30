@@ -125,11 +125,17 @@ export class GitHubService {
   }
 
   private getFullUrl(path: string): string {
-    const cleanPath = path.replace(/^\/+/, '');
-    if (cleanPath.startsWith('http')) {
-      return cleanPath;
+    path = path.replace(/^\/+/, '');
+    
+    if (path.startsWith('http')) {
+      return path;
     }
-    return `${this.baseUrl}/${cleanPath}`;
+
+    if (path.includes('images/originals/')) {
+      path = path.split('images/originals/').pop() || path;
+    }
+
+    return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${this.branch}/images/originals/${path}`;
   }
 
   private async getFileContent(path: string): Promise<{ content: string; sha: string }> {
@@ -766,22 +772,32 @@ export class GitHubService {
 
       for (const entry of allEntries) {
         try {
-          let isValid = true;
-          for (const img of entry.images) {
+          const validImages = entry.images.filter(img => {
             const url = new URL(img.url);
             const filename = url.pathname.split('/').pop();
-            if (!filename) continue;
+            if (!filename) return false;
             
             const imagePath = `images/originals/${filename}`;
-            if (!validImagePaths.has(imagePath)) {
-              isValid = false;
-              console.warn(`Image file missing for entry ${entry.id}:`, imagePath);
-              break;
+            const isValid = validImagePaths.has(imagePath);
+            
+            if (!isValid) {
+              console.debug(`Skipping invalid image in entry ${entry.id}:`, imagePath);
             }
-          }
+            
+            return isValid;
+          });
 
-          if (isValid) {
-            validEntries.set(entry.id, entry);
+          if (validImages.length > 0) {
+            validEntries.set(entry.id, {
+              ...entry,
+              images: validImages.map(img => ({
+                ...img,
+                url: this.getFullUrl(img.url),
+                thumbnail: img.thumbnail ? this.getFullUrl(img.thumbnail) : undefined
+              }))
+            });
+          } else {
+            console.warn(`Entry ${entry.id} has no valid images, skipping`);
           }
         } catch (error) {
           console.warn(`Error validating entry ${entry.id}:`, error);
