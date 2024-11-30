@@ -1,0 +1,75 @@
+{
+  "id": "28",
+  "title": "Sgzh zehj et ae aeyayargtt",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1732951442453_00000282-PHOTO-2024-11-02-08-48-30.JPG",
+      "thumbnail": "images/originals/1732951442453_00000282-PHOTO-2024-11-02-08-48-30.JPG",
+      "size": 459633
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 4050681589234335",
+    "prompt": "Sgzh zehj et ae aeyayargtt",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-30T07:24:06.249Z",
+    "lastModified": "2024-11-30T07:24:06.249Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "Dynamic arrangement of nine bold, colorful panels featuring various themes such as superheroes, nature, and urban life. Each panel employs striking lines and vivid colors to convey energy and emotion.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Pop Art",
+      "secondary": [
+        "Comic",
+        "Graphic Novel"
+      ],
+      "influences": [
+        "Roy Lichtenstein",
+        "Andy Warhol"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with clear lines and defined colors",
+      "renderStyle": "Vector art",
+      "detailLevel": "Moderate detail with emphasis on stylization",
+      "lighting": "Flat lighting with high contrast"
+    },
+    "colors": {
+      "palette": [
+        "#FF0000",
+        "#0000FF",
+        "#FFFF00"
+      ],
+      "mood": "Vibrant and energetic",
+      "contrast": "High contrast between colors"
+    },
+    "tags": {
+      "style": [
+        "Pop Art",
+        "Comic",
+        "Illustration"
+      ],
+      "technical": [
+        "Vector",
+        "High Quality",
+        "Stylized"
+      ],
+      "mood": [
+        "Energetic",
+        "Bold",
+        "Dynamic"
+      ]
+    }
+  }
+}
