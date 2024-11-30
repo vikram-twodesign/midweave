@@ -1,17 +1,17 @@
 {
   "id": "27",
-  "title": "fghjdtstjs a tsetusetuseh ",
+  "title": "skasjh;ash;lk ;jhw;  GH;wi;wGJH",
   "description": "",
   "images": [
     {
-      "url": "images/originals/1732951153359_00000212-PHOTO-2024-10-08-07-55-19.JPG",
-      "thumbnail": "images/originals/1732951153359_00000212-PHOTO-2024-10-08-07-55-19.JPG",
-      "size": 179509
+      "url": "images/originals/1732953575491_-0000255-PHOTO-2024-09-13-14-28-42.JPG",
+      "thumbnail": "images/originals/1732953575491_-0000255-PHOTO-2024-09-13-14-28-42.JPG",
+      "size": 403543
     }
   ],
   "parameters": {
-    "sref": "--sref 4050681589233442",
-    "prompt": "fghjdtstjs a tsetusetuseh ",
+    "sref": "--sref 8375359895456232235",
+    "prompt": "skasjh;ash;lk ;jhw;  GH;wi;wGJH",
     "style": "",
     "ar": "",
     "chaos": null,
@@ -20,55 +20,55 @@
     "stylize": null
   },
   "adminMetadata": {
-    "createdAt": "2024-11-30T07:19:17.310Z",
-    "lastModified": "2024-11-30T07:19:17.310Z",
+    "createdAt": "2024-11-30T07:59:40.686Z",
+    "lastModified": "2024-11-30T07:59:40.686Z",
     "featured": false,
     "curatorNotes": ""
   },
   "aiAnalysis": {
-    "description": "Four-panel illustration featuring a surreal space theme, showcasing a floating Nike logo, a sleek rocket, a UFO beaming light, and an astronaut on a swing in space. Each panel utilizes a cohesive blue color palette against a dark starry background.",
-    "imageType": "Illustration",
+    "description": "A vibrant collage of surreal scenes featuring characters and objects amidst lush foliage and geometric shapes. The composition blends human figures, animals, and everyday items in a dreamlike, colorful environment.",
+    "imageType": "Digital Art",
     "style": {
-      "primary": "Modern graphic art",
+      "primary": "Surrealism",
       "secondary": [
-        "vector art",
-        "flat design"
+        "3D Art",
+        "Concept Art"
       ],
       "influences": [
-        "sci-fi aesthetics",
-        "commercial branding"
+        "Contemporary Art",
+        "Pop Culture"
       ]
     },
     "technical": {
-      "quality": "High-quality, clean lines with smooth gradients",
-      "renderStyle": "Digital vector rendering",
-      "detailLevel": "Moderate detail with emphasis on shape and color",
-      "lighting": "Subtle lighting effects with a focus on contrast between elements"
+      "quality": "High-quality, polished rendering",
+      "renderStyle": "3D rendering with stylized elements",
+      "detailLevel": "Moderate to high detail with smooth textures",
+      "lighting": "Soft, ambient lighting with vibrant highlights"
     },
     "colors": {
       "palette": [
-        "#001F3F",
-        "#0074D9",
-        "#7FDBFF"
+        "#FF6F61",
+        "#6B5B95",
+        "#88B04B"
       ],
-      "mood": "Calm and whimsical with a futuristic vibe",
-      "contrast": "High contrast between dark background and light elements"
+      "mood": "Whimsical and imaginative",
+      "contrast": "High contrast between bright colors and darker elements"
     },
     "tags": {
       "style": [
-        "graphic design",
-        "sci-fi",
-        "minimalist"
+        "surreal",
+        "colorful",
+        "modern"
       ],
       "technical": [
-        "vector",
-        "digital illustration",
-        "high resolution"
+        "3D",
+        "rendered",
+        "stylized"
       ],
       "mood": [
         "whimsical",
-        "futuristic",
-        "playful"
+        "dreamlike",
+        "vibrant"
       ]
     }
   }
