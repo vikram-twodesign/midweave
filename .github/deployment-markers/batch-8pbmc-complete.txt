@@ -1,0 +1,2 @@
+Batch deletion complete: 2024-11-30T18:57:01.361Z
+Deleted IDs: 22
