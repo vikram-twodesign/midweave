@@ -1,32 +1,17 @@
 {
   "id": "27",
-  "title": "jfkhdytrkfhkjhvkyt gligkjhgk",
+  "title": "fghjdtstjs a tsetusetuseh ",
   "description": "",
   "images": [
     {
-      "url": "images/originals/1732948895103_00000254-PHOTO-2024-10-18-09-27-59.JPG",
-      "thumbnail": "images/originals/1732948895103_00000254-PHOTO-2024-10-18-09-27-59.JPG",
-      "size": 197390
-    },
-    {
-      "url": "images/originals/1732948895103_00000253-PHOTO-2024-10-18-09-27-47.JPG",
-      "thumbnail": "images/originals/1732948895103_00000253-PHOTO-2024-10-18-09-27-47.JPG",
-      "size": 211472
-    },
-    {
-      "url": "images/originals/1732948895103_00000252-PHOTO-2024-10-18-09-27-36.JPG",
-      "thumbnail": "images/originals/1732948895103_00000252-PHOTO-2024-10-18-09-27-36.JPG",
-      "size": 219689
-    },
-    {
-      "url": "images/originals/1732948895103_00000251-PHOTO-2024-10-18-09-27-21.JPG",
-      "thumbnail": "images/originals/1732948895103_00000251-PHOTO-2024-10-18-09-27-21.JPG",
-      "size": 153707
+      "url": "images/originals/1732951153359_00000212-PHOTO-2024-10-08-07-55-19.JPG",
+      "thumbnail": "images/originals/1732951153359_00000212-PHOTO-2024-10-08-07-55-19.JPG",
+      "size": 179509
     }
   ],
   "parameters": {
-    "sref": "--sref 40506815447575",
-    "prompt": "jfkhdytrkfhkjhvkyt gligkjhgk",
+    "sref": "--sref 4050681589233442",
+    "prompt": "fghjdtstjs a tsetusetuseh ",
     "style": "",
     "ar": "",
     "chaos": null,
@@ -35,56 +20,55 @@
     "stylize": null
   },
   "adminMetadata": {
-    "createdAt": "2024-11-30T06:41:41.196Z",
-    "lastModified": "2024-11-30T06:41:41.196Z",
+    "createdAt": "2024-11-30T07:19:17.310Z",
+    "lastModified": "2024-11-30T07:19:17.310Z",
     "featured": false,
     "curatorNotes": ""
   },
   "aiAnalysis": {
-    "description": "A futuristic spaceship with intricate detailing and distinct features, positioned prominently on a flat surface. The background contains stylized hills and circular forms, enhancing the sci-fi atmosphere.",
-    "imageType": "Digital Art",
+    "description": "Four-panel illustration featuring a surreal space theme, showcasing a floating Nike logo, a sleek rocket, a UFO beaming light, and an astronaut on a swing in space. Each panel utilizes a cohesive blue color palette against a dark starry background.",
+    "imageType": "Illustration",
     "style": {
-      "primary": "Line Art",
+      "primary": "Modern graphic art",
       "secondary": [
-        "Sci-Fi",
-        "Concept Art"
+        "vector art",
+        "flat design"
       ],
       "influences": [
-        "Futurism",
-        "Industrial Design"
+        "sci-fi aesthetics",
+        "commercial branding"
       ]
     },
     "technical": {
-      "quality": "High-quality digital rendering with clear outlines and structured forms.",
-      "renderStyle": "Vector rendering style emphasizing clean lines and shading.",
-      "detailLevel": "Moderate detail with focus on mechanical elements.",
-      "lighting": "Soft ambient lighting, creating a subtle contrast without harsh shadows."
+      "quality": "High-quality, clean lines with smooth gradients",
+      "renderStyle": "Digital vector rendering",
+      "detailLevel": "Moderate detail with emphasis on shape and color",
+      "lighting": "Subtle lighting effects with a focus on contrast between elements"
     },
     "colors": {
       "palette": [
-        "#EDE5D2",
-        "#BFAF9D",
-        "#A89B7D"
+        "#001F3F",
+        "#0074D9",
+        "#7FDBFF"
       ],
-      "mood": "Minimalistic and calm, evoking a sense of exploration.",
-      "contrast": "Low contrast, with a gentle interplay of light and shadow."
+      "mood": "Calm and whimsical with a futuristic vibe",
+      "contrast": "High contrast between dark background and light elements"
     },
     "tags": {
       "style": [
-        "futuristic",
-        "spaceship",
-        "mechanical",
-        "line art"
+        "graphic design",
+        "sci-fi",
+        "minimalist"
       ],
       "technical": [
-        "digital",
         "vector",
-        "clean lines"
+        "digital illustration",
+        "high resolution"
       ],
       "mood": [
-        "exploration",
-        "sci-fi",
-        "minimalistic"
+        "whimsical",
+        "futuristic",
+        "playful"
       ]
     }
   }
