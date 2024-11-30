@@ -1,0 +1,91 @@
+{
+  "id": "27",
+  "title": "jfkhdytrkfhkjhvkyt gligkjhgk",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1732948895103_00000254-PHOTO-2024-10-18-09-27-59.JPG",
+      "thumbnail": "images/originals/1732948895103_00000254-PHOTO-2024-10-18-09-27-59.JPG",
+      "size": 197390
+    },
+    {
+      "url": "images/originals/1732948895103_00000253-PHOTO-2024-10-18-09-27-47.JPG",
+      "thumbnail": "images/originals/1732948895103_00000253-PHOTO-2024-10-18-09-27-47.JPG",
+      "size": 211472
+    },
+    {
+      "url": "images/originals/1732948895103_00000252-PHOTO-2024-10-18-09-27-36.JPG",
+      "thumbnail": "images/originals/1732948895103_00000252-PHOTO-2024-10-18-09-27-36.JPG",
+      "size": 219689
+    },
+    {
+      "url": "images/originals/1732948895103_00000251-PHOTO-2024-10-18-09-27-21.JPG",
+      "thumbnail": "images/originals/1732948895103_00000251-PHOTO-2024-10-18-09-27-21.JPG",
+      "size": 153707
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 40506815447575",
+    "prompt": "jfkhdytrkfhkjhvkyt gligkjhgk",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-11-30T06:41:41.196Z",
+    "lastModified": "2024-11-30T06:41:41.196Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "A futuristic spaceship with intricate detailing and distinct features, positioned prominently on a flat surface. The background contains stylized hills and circular forms, enhancing the sci-fi atmosphere.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Line Art",
+      "secondary": [
+        "Sci-Fi",
+        "Concept Art"
+      ],
+      "influences": [
+        "Futurism",
+        "Industrial Design"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality digital rendering with clear outlines and structured forms.",
+      "renderStyle": "Vector rendering style emphasizing clean lines and shading.",
+      "detailLevel": "Moderate detail with focus on mechanical elements.",
+      "lighting": "Soft ambient lighting, creating a subtle contrast without harsh shadows."
+    },
+    "colors": {
+      "palette": [
+        "#EDE5D2",
+        "#BFAF9D",
+        "#A89B7D"
+      ],
+      "mood": "Minimalistic and calm, evoking a sense of exploration.",
+      "contrast": "Low contrast, with a gentle interplay of light and shadow."
+    },
+    "tags": {
+      "style": [
+        "futuristic",
+        "spaceship",
+        "mechanical",
+        "line art"
+      ],
+      "technical": [
+        "digital",
+        "vector",
+        "clean lines"
+      ],
+      "mood": [
+        "exploration",
+        "sci-fi",
+        "minimalistic"
+      ]
+    }
+  }
+}
