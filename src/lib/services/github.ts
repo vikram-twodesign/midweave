@@ -396,6 +396,29 @@ export class GitHubService {
       const safePath = path.startsWith('images/originals/') ? path : `images/originals/${filename}`;
       console.debug('Uploading image:', { originalPath: path, safePath });
 
+      // Check if images/originals directory exists
+      try {
+        await this.octokit.rest.repos.getContent({
+          owner: this.owner,
+          repo: this.repo,
+          path: 'images/originals',
+          ref: this.branch
+        });
+      } catch (error) {
+        if (error instanceof RequestError && error.status === 404) {
+          // Create an empty file to initialize the directory
+          await this.octokit.rest.repos.createOrUpdateFileContents({
+            owner: this.owner,
+            repo: this.repo,
+            path: 'images/originals/.gitkeep',
+            message: 'Initialize images/originals directory',
+            content: '',
+            branch: this.branch
+          });
+          console.debug('Created images/originals directory');
+        }
+      }
+
       const base64Content = await this.fileToBase64(file);
 
       try {

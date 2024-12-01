@@ -21,7 +21,7 @@ permissions:
 
 # Allow concurrent deployments with unique identifiers
 concurrency:
-  group: pages-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: pages-${{ github.workflow }}-${{ github.sha }}
   cancel-in-progress: false
 
 jobs:
@@ -54,12 +54,12 @@ jobs:
           NODE_ENV: production
           NEXT_PUBLIC_GITHUB_TOKEN: ${{ secrets.NEXT_PUBLIC_GITHUB_TOKEN }}
           NEXT_PUBLIC_REPOSITORY: ${{ secrets.NEXT_PUBLIC_REPOSITORY }}
-          NEXT_PUBLIC_BRANCH: ${{ secrets.NEXT_PUBLIC_BRANCH }}
+          NEXT_PUBLIC_BRANCH: 'main'
           NEXT_PUBLIC_MW_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_MW_ACCESS_TOKEN }}
           NEXT_PUBLIC_OPENAI_API_KEY: ${{ secrets.NEXT_PUBLIC_OPENAI_API_KEY }}
           MW_CLIENT_ID: ${{ secrets.MW_CLIENT_ID }}
           MW_CLIENT_SECRET: ${{ secrets.MW_CLIENT_SECRET }}
-          NEXT_PUBLIC_BASE_PATH: ${{ secrets.NEXT_PUBLIC_BASE_PATH || '' }}
+          NEXT_PUBLIC_BASE_PATH: ''
         run: npm run build
         timeout-minutes: 5
 
