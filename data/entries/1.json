@@ -1,0 +1,75 @@
+{
+  "id": "1",
+  "title": "--sw 500 --personalize 57e8bjg",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733079087968_00000056-PHOTO-2024-09-12-09-07-20.JPG",
+      "thumbnail": "images/originals/1733079087968_00000056-PHOTO-2024-09-12-09-07-20.JPG",
+      "size": 118878
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 2880356446",
+    "prompt": "--sw 500 --personalize 57e8bjg",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": 1000
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-01T18:51:32.960Z",
+    "lastModified": "2024-12-01T18:51:32.960Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "Vibrant 3D render showcasing a playful arrangement of whimsical objects, including a giraffe, hand, bottle, bull, unicorn, and apple. The composition balances organic and geometric forms against a soft, minimal backdrop.",
+    "imageType": "3D Render",
+    "style": {
+      "primary": "Contemporary",
+      "secondary": [
+        "Playful",
+        "Minimalist"
+      ],
+      "influences": [
+        "Modern design",
+        "Pop culture"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality, sharp details",
+      "renderStyle": "Realistic rendering",
+      "detailLevel": "High",
+      "lighting": "Soft, diffused lighting"
+    },
+    "colors": {
+      "palette": [
+        "#F5D8B7",
+        "#E4B7A0",
+        "#F9E5C9"
+      ],
+      "mood": "Cheerful and lighthearted",
+      "contrast": "Low contrast, harmonious tones"
+    },
+    "tags": {
+      "style": [
+        "3D",
+        "whimsical",
+        "playful"
+      ],
+      "technical": [
+        "high quality",
+        "realistic",
+        "soft lighting"
+      ],
+      "mood": [
+        "cheerful",
+        "light",
+        "minimalist"
+      ]
+    }
+  }
+}
