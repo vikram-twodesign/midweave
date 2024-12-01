@@ -1,0 +1,75 @@
+{
+  "id": "3",
+  "title": "--sw 500 --personalize 57e8bjg",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733079937128_00000056-PHOTO-2024-09-12-09-07-20.JPG",
+      "thumbnail": "images/originals/1733079937128_00000056-PHOTO-2024-09-12-09-07-20.JPG",
+      "size": 118878
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 2880356446",
+    "prompt": "--sw 500 --personalize 57e8bjg",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": 1000
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-01T19:05:41.359Z",
+    "lastModified": "2024-12-01T19:05:41.359Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "A playful arrangement of whimsical 3D objects, featuring a giraffe, a hand gesture, a bottle, a bull, a unicorn, a glass vessel, an apple, and a ghost. Each object exhibits smooth surfaces and soft colors, contributing to a cheerful and modern aesthetic.",
+    "imageType": "3D Render",
+    "style": {
+      "primary": "Contemporary Minimalism",
+      "secondary": [
+        "Playful",
+        "Cartoonish"
+      ],
+      "influences": [
+        "Modern Design",
+        "Pop Art"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality render with sharp details and smooth textures",
+      "renderStyle": "Photorealistic",
+      "detailLevel": "Highly detailed with a focus on surface reflections",
+      "lighting": "Soft, even lighting that enhances the colors and shapes"
+    },
+    "colors": {
+      "palette": [
+        "#F9D5A0",
+        "#F6B4A0",
+        "#F1E9D2"
+      ],
+      "mood": "Bright and cheerful",
+      "contrast": "Low contrast with harmonious color blending"
+    },
+    "tags": {
+      "style": [
+        "3D",
+        "Minimalist",
+        "Whimsical"
+      ],
+      "technical": [
+        "High Resolution",
+        "Smooth Textures",
+        "Soft Lighting"
+      ],
+      "mood": [
+        "Joyful",
+        "Playful",
+        "Modern"
+      ]
+    }
+  }
+}
