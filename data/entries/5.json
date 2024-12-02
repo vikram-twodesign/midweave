@@ -1,0 +1,76 @@
+{
+  "id": "5",
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733127848368_TWEET_IMAGE_1733127819866.JPG",
+      "thumbnail": "images/originals/1733127848368_TWEET_IMAGE_1733127819866.JPG",
+      "size": 137322
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 2853831831",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-02T08:24:11.272Z",
+    "lastModified": "2024-12-02T08:24:11.272Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "Vibrant colors and surreal forms combine in a grid layout showcasing four distinct elements: a frog, abstract water droplets, a stylized eye, and a mushroom. Each quadrant features a blend of neon hues against a dark background, creating a striking visual contrast.",
+    "imageType": "Digital Art",
+    "style": {
+      "primary": "Surrealism",
+      "secondary": [
+        "Abstract",
+        "Contemporary"
+      ],
+      "influences": [
+        "Pop Art",
+        "Neon Aesthetics"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with sharp details and smooth gradients",
+      "renderStyle": "Digital rendering",
+      "detailLevel": "High detail, particularly in textures",
+      "lighting": "Soft, diffuse lighting enhancing colors"
+    },
+    "colors": {
+      "palette": [
+        "#FF0055",
+        "#00BFFF",
+        "#FFD700"
+      ],
+      "mood": "Playful and energetic",
+      "contrast": "High contrast between bright colors and dark background"
+    },
+    "tags": {
+      "style": [
+        "surreal",
+        "abstract",
+        "neon",
+        "modern"
+      ],
+      "technical": [
+        "digital",
+        "high quality",
+        "rendering"
+      ],
+      "mood": [
+        "playful",
+        "vibrant",
+        "energetic"
+      ]
+    }
+  }
+}
