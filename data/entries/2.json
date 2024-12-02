@@ -1,0 +1,86 @@
+{
+  "id": "2",
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733126545588_TWEET_IMAGE_1733126491531.JPG",
+      "thumbnail": "images/originals/1733126545588_TWEET_IMAGE_1733126491531.JPG",
+      "size": 75652
+    },
+    {
+      "url": "images/originals/1733126545588_TWEET_IMAGE_1733126491760.JPG",
+      "thumbnail": "images/originals/1733126545588_TWEET_IMAGE_1733126491760.JPG",
+      "size": 79431
+    },
+    {
+      "url": "images/originals/1733126545588_TWEET_IMAGE_1733126491762.JPG",
+      "thumbnail": "images/originals/1733126545588_TWEET_IMAGE_1733126491762.JPG",
+      "size": 79294
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 3870814046",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-02T08:02:30.748Z",
+    "lastModified": "2024-12-02T08:02:30.748Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "A haunting scene featuring a figure dressed in white, seated in front of a massive skull-shaped backdrop with sharp, elongated teeth. The stark contrast between the figure and the dark, menacing presence of the skull creates a dramatic and eerie atmosphere.",
+    "imageType": "Photograph",
+    "style": {
+      "primary": "Surrealism",
+      "secondary": [
+        "Dark Fantasy",
+        "Gothic"
+      ],
+      "influences": [
+        "Horror Art",
+        "Fantasy Illustration"
+      ]
+    },
+    "technical": {
+      "quality": "High resolution with sharp details",
+      "renderStyle": "Realistic rendering",
+      "detailLevel": "Highly detailed, especially in textures and forms",
+      "lighting": "Dim, with focused illumination on the central figure"
+    },
+    "colors": {
+      "palette": [
+        "#FFFFFF",
+        "#000000",
+        "#808080"
+      ],
+      "mood": "Foreboding and melancholic",
+      "contrast": "High contrast between light and dark elements"
+    },
+    "tags": {
+      "style": [
+        "surreal",
+        "gothic",
+        "dark fantasy",
+        "horror"
+      ],
+      "technical": [
+        "high resolution",
+        "realistic",
+        "detailed"
+      ],
+      "mood": [
+        "eerie",
+        "foreboding",
+        "melancholic"
+      ]
+    }
+  }
+}
