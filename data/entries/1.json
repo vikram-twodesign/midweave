@@ -1,17 +1,17 @@
 {
   "id": "1",
-  "title": "hsdhsht shaeryq ",
+  "title": "sgshrwh ehethsethth",
   "description": "",
   "images": [
     {
-      "url": "images/originals/1733125636666_00000355-PHOTO-2024-11-24-08-55-35.JPG",
-      "thumbnail": "images/originals/1733125636666_00000355-PHOTO-2024-11-24-08-55-35.JPG",
-      "size": 319248
+      "url": "images/originals/1733126426231_00000352-PHOTO-2024-11-24-01-06-54.JPG",
+      "thumbnail": "images/originals/1733126426231_00000352-PHOTO-2024-11-24-01-06-54.JPG",
+      "size": 604556
     }
   ],
   "parameters": {
-    "sref": "--sref 40506815472323",
-    "prompt": "hsdhsht shaeryq ",
+    "sref": "--sref 40506815443252",
+    "prompt": "sgshrwh ehethsethth",
     "style": "",
     "ar": "",
     "chaos": null,
@@ -20,55 +20,55 @@
     "stylize": null
   },
   "adminMetadata": {
-    "createdAt": "2024-12-02T07:47:21.366Z",
-    "lastModified": "2024-12-02T07:47:21.366Z",
+    "createdAt": "2024-12-02T08:00:30.943Z",
+    "lastModified": "2024-12-02T08:00:30.943Z",
     "featured": false,
     "curatorNotes": ""
   },
   "aiAnalysis": {
-    "description": "A playful arrangement of stylized 3D objects featuring soft pastel tones. Each item, from a wine glass to a cartoonish bird, is meticulously crafted with a whimsical aesthetic.",
-    "imageType": "3D Render",
+    "description": "A grid composition featuring various white objects against a muted blue-gray background. Elements include a superhero silhouette, expressive faces, and a rocket, creating a whimsical and surreal atmosphere.",
+    "imageType": "Photograph",
     "style": {
-      "primary": "Whimsical and playful",
+      "primary": "Minimalistic",
       "secondary": [
-        "Minimalist",
-        "Cartoonish"
+        "Surrealism",
+        "Conceptual Art"
       ],
       "influences": [
-        "Modern design",
-        "Kawaii culture"
+        "Contemporary Art",
+        "Pop Culture"
       ]
     },
     "technical": {
-      "quality": "High-quality rendering with smooth finishes",
-      "renderStyle": "Realistic shading with soft gradients",
-      "detailLevel": "High detail in textures and forms",
-      "lighting": "Soft, diffused lighting creating an inviting atmosphere"
+      "quality": "High-resolution with sharp details",
+      "renderStyle": "Flat lay arrangement",
+      "detailLevel": "Moderate to high, with a focus on textures",
+      "lighting": "Soft, diffused lighting enhancing the serene mood"
     },
     "colors": {
       "palette": [
-        "#F9C8D4",
-        "#F2E1C1",
-        "#B6E3D8"
+        "#F7F7F7",
+        "#B0C4D9",
+        "#A9A9A9"
       ],
-      "mood": "Light and cheerful",
-      "contrast": "Low contrast with harmonious color blending"
+      "mood": "Calm and whimsical",
+      "contrast": "Low contrast, emphasizing subtle variations"
     },
     "tags": {
       "style": [
-        "3D art",
-        "playful",
-        "stylized"
+        "minimalism",
+        "whimsical",
+        "surreal"
       ],
       "technical": [
-        "high detail",
-        "soft lighting",
-        "smooth textures"
+        "high-resolution",
+        "flat lay",
+        "soft lighting"
       ],
       "mood": [
-        "cheerful",
-        "whimsical",
-        "inviting"
+        "calm",
+        "playful",
+        "thought-provoking"
       ]
     }
   }
