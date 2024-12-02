@@ -1,0 +1,75 @@
+{
+  "id": "4",
+  "title": "gsahdhfdathstj ",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733127680008_00000130-PHOTO-2024-09-23-23-19-00.JPG",
+      "thumbnail": "images/originals/1733127680008_00000130-PHOTO-2024-09-23-23-19-00.JPG",
+      "size": 269003
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 405068154423525",
+    "prompt": "gsahdhfdathstj ",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-02T08:21:23.512Z",
+    "lastModified": "2024-12-02T08:21:23.512Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "An arrangement of eight stylized portraits featuring diverse characters and animals, each framed distinctly. The imagery combines elements of realism and illustration, showcasing intricate facial expressions and unique attire.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Stylized realism",
+      "secondary": [
+        "Portraiture",
+        "Illustrative art"
+      ],
+      "influences": [
+        "Contemporary art",
+        "Graphic novels"
+      ]
+    },
+    "technical": {
+      "quality": "High quality with sharp lines and smooth gradients",
+      "renderStyle": "Digital illustration",
+      "detailLevel": "High detail in characters and backgrounds",
+      "lighting": "Soft, ambient lighting with a warm tone"
+    },
+    "colors": {
+      "palette": [
+        "#F0E5D8",
+        "#2A2D34",
+        "#C7C4B9"
+      ],
+      "mood": "Warm and inviting with a hint of nostalgia",
+      "contrast": "Moderate contrast enhancing character features"
+    },
+    "tags": {
+      "style": [
+        "illustration",
+        "portrait",
+        "stylized"
+      ],
+      "technical": [
+        "digital art",
+        "high detail",
+        "soft lighting"
+      ],
+      "mood": [
+        "warm",
+        "inviting",
+        "nostalgic"
+      ]
+    }
+  }
+}
