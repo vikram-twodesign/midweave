@@ -1,0 +1,75 @@
+{
+  "id": "1",
+  "title": "hsdhsht shaeryq ",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733125636666_00000355-PHOTO-2024-11-24-08-55-35.JPG",
+      "thumbnail": "images/originals/1733125636666_00000355-PHOTO-2024-11-24-08-55-35.JPG",
+      "size": 319248
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 40506815472323",
+    "prompt": "hsdhsht shaeryq ",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-02T07:47:21.366Z",
+    "lastModified": "2024-12-02T07:47:21.366Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "A playful arrangement of stylized 3D objects featuring soft pastel tones. Each item, from a wine glass to a cartoonish bird, is meticulously crafted with a whimsical aesthetic.",
+    "imageType": "3D Render",
+    "style": {
+      "primary": "Whimsical and playful",
+      "secondary": [
+        "Minimalist",
+        "Cartoonish"
+      ],
+      "influences": [
+        "Modern design",
+        "Kawaii culture"
+      ]
+    },
+    "technical": {
+      "quality": "High-quality rendering with smooth finishes",
+      "renderStyle": "Realistic shading with soft gradients",
+      "detailLevel": "High detail in textures and forms",
+      "lighting": "Soft, diffused lighting creating an inviting atmosphere"
+    },
+    "colors": {
+      "palette": [
+        "#F9C8D4",
+        "#F2E1C1",
+        "#B6E3D8"
+      ],
+      "mood": "Light and cheerful",
+      "contrast": "Low contrast with harmonious color blending"
+    },
+    "tags": {
+      "style": [
+        "3D art",
+        "playful",
+        "stylized"
+      ],
+      "technical": [
+        "high detail",
+        "soft lighting",
+        "smooth textures"
+      ],
+      "mood": [
+        "cheerful",
+        "whimsical",
+        "inviting"
+      ]
+    }
+  }
+}
