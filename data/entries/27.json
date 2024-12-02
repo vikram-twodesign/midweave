@@ -1,0 +1,76 @@
+{
+  "id": "27",
+  "title": "Untitled Style",
+  "description": "",
+  "images": [
+    {
+      "url": "images/originals/1733124598673_TWEET_IMAGE_1733124550956.JPG",
+      "thumbnail": "images/originals/1733124598673_TWEET_IMAGE_1733124550956.JPG",
+      "size": 193495
+    }
+  ],
+  "parameters": {
+    "sref": "--sref 1680826976",
+    "prompt": "",
+    "style": "",
+    "ar": "",
+    "chaos": null,
+    "version": "",
+    "quality": null,
+    "stylize": null
+  },
+  "adminMetadata": {
+    "createdAt": "2024-12-02T07:30:04.917Z",
+    "lastModified": "2024-12-02T07:30:04.917Z",
+    "featured": false,
+    "curatorNotes": ""
+  },
+  "aiAnalysis": {
+    "description": "Bold illustrations feature a dramatic landscape with mountains and clouds, alongside a stylized portrait of a man with a mustache and glasses. The bottom panels hint at narrative scenes with shadowy figures, creating an intriguing visual narrative.",
+    "imageType": "Illustration",
+    "style": {
+      "primary": "Graphic novel style",
+      "secondary": [
+        "Minimalistic",
+        "Line art",
+        "Retro"
+      ],
+      "influences": [
+        "Comic art",
+        "Western themes"
+      ]
+    },
+    "technical": {
+      "quality": "High contrast with strong lines",
+      "renderStyle": "Hand-drawn illustration",
+      "detailLevel": "Moderate detail with emphasis on shapes",
+      "lighting": "Dramatic use of light and shadow"
+    },
+    "colors": {
+      "palette": [
+        "#FFD700",
+        "#000000",
+        "#A0522D"
+      ],
+      "mood": "Mysterious and adventurous",
+      "contrast": "High contrast between dark backgrounds and bright elements"
+    },
+    "tags": {
+      "style": [
+        "graphic",
+        "illustrative",
+        "comic"
+      ],
+      "technical": [
+        "hand-drawn",
+        "high-contrast",
+        "bold lines"
+      ],
+      "mood": [
+        "mysterious",
+        "adventurous",
+        "dramatic"
+      ]
+    }
+  }
+}
